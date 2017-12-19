@@ -5,7 +5,7 @@
 
 void Waves::compute_D_zz() {
 	for (size_t ip = 0; ip < p_size; ++ip) {
-		double k = 1. / larmor_radius(p.at(ip), params.magnetic_field());
+		double k = 1. / larmor_radius(p.at(ip), par.magnetic_field());
 		double factor = beta(p.at(ip)) * c_light / 3.0 / pow2(k);
 		for (size_t iz = 1; iz < z_size - 1; ++iz) {
 			double value = factor / W_sg.get(ip, iz);
@@ -17,7 +17,6 @@ void Waves::compute_D_zz() {
 }
 
 void Waves::compute_dfdz() {
-	double dz = fabs(z.at(1) - z.at(0));
 	for (size_t ip = 0; ip < p_size; ++ip) {
 		double value = 0;
 		for (size_t iz = 1; iz < z_size - 1; ++iz) {
