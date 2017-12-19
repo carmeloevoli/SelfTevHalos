@@ -65,3 +65,7 @@ double S_i(const double& T_i, const double& gamma_e) {
 	double value = 45. * pow2(electron_mass_c2) / 64. / pow2(M_PI) / pow2(k_boltzmann * T_i);
 	return value / (value + pow2(gamma_e));
 }
+
+double source_evolution(const double& t_now, const double& t_decay) {
+	return std::pow(1. + t_now / t_decay, -2.);
+}

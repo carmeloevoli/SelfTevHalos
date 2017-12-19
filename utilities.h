@@ -27,4 +27,6 @@ double I_of_alpha(double alpha, double x_min, double x_c);
 
 double S_i(const double& T_i, const double& gamma_e);
 
+double source_evolution(const double& t_now, const double& t_decay);
+
 #endif /* UTILITIES_H_ */
