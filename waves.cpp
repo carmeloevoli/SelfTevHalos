@@ -14,14 +14,15 @@ void Waves::build_p_axis(const double& p_min, const double& p_max, const size_t&
 	this->p_size = p.get_size();
 	p.set_reference_value(sqrt(p_min * p_max));
 	p.show_axis("p", GeV_c);
+	dlnp = std::log(p.at(1) / p.at(0));
 }
 
 void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
 	z.build_lin_axis(-halo_size, halo_size, z_size);
 	this->z_size = z.get_size();
 	z.set_reference_value(0);
-	dz = fabs(z.at(1) - z.at(0));
 	z.show_axis("z", kpc);
+	dz = fabs(z.at(1) - z.at(0));
 }
 
 double Waves::compute_constant_CR_source_term_1D() {
