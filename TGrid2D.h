@@ -12,7 +12,8 @@ class TGrid2D {
 	size_t Nx, Nz;
 
 public:
-	TGrid2D() : Nx(0), Nz(0) {
+	TGrid2D() :
+			Nx(0), Nz(0) {
 	}
 
 	TGrid2D(size_t Nx, size_t Nz) {
@@ -67,7 +68,7 @@ public:
 
 	void clearGrid() {
 		grid.clear();
-		return ;
+		return;
 	}
 
 	size_t getNx() const {
