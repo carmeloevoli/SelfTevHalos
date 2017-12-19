@@ -16,11 +16,11 @@ private:
 	T reference_value;
 	size_t size;
 	size_t idx;
-	vector<T> axis;
+	std::vector<T> axis;
 
 public:
 	TAxis() :
-		min(0), max(0), reference_value(0), size(0), idx(0) {
+			min(0), max(0), reference_value(0), size(0), idx(0) {
 	}
 
 	virtual ~TAxis() {
@@ -79,12 +79,10 @@ public:
 		}
 	}
 
-	void show_axis(const string& name, const T& units) const {
-		cout << name << " axis in : "
-				<< *min_element(axis.begin(), axis.end()) / units << " ... ";
-		cout << *max_element(axis.begin(), axis.end()) / units << " with "
-				<< axis.size() << " elements.";
-		cout << "\n";
+	void show_axis(const std::string& name, const T& units) const {
+		std::cout << name << " axis in : " << *min_element(axis.begin(), axis.end()) / units << " ... ";
+		std::cout << *max_element(axis.begin(), axis.end()) / units << " with " << axis.size() << " elements.";
+		std::cout << "\n";
 	}
 
 	T get_max() const {
@@ -101,8 +99,7 @@ public:
 
 	size_t get_idx(T value) {
 		if (value < 0.999 * min || value > max * 1.001) {
-			cerr << "Error: Value " << value << " cannot be set in the range : "
-					<< min << " ... " << max << "\n";
+			std::cerr << "Error: Value " << value << " cannot be set in the range : " << min << " ... " << max << "\n";
 			exit(-1);
 		} else {
 			return find_nearest(axis, value);
@@ -111,7 +108,7 @@ public:
 
 	size_t get_lower_idx(T value) {
 		if (value < min || value > max) {
-			cerr << "Value not in the range " << __FILE__ << __LINE__ << "\n";
+			std::cerr << "Value not in the range " << __FILE__ << __LINE__ << "\n";
 			exit(-1);
 		}
 		size_t out = 0;
@@ -126,8 +123,7 @@ public:
 
 	void set_reference_value(T referenceValue) {
 		if (referenceValue < min || referenceValue > max) {
-			cerr << "Error: Reference_value " << referenceValue
-					<< " cannot be set!" << "\n";
+			std::cerr << "Error: Reference_value " << referenceValue << " cannot be set!" << "\n";
 			exit(-1);
 		} else {
 			reference_value = referenceValue;
