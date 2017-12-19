@@ -4,7 +4,6 @@
 #define OMP_NUM_THREADS 4
 
 void Waves::evolve_f_in_z(const size_t& number_of_operators, const double& t_now) {
-	double dt_half = 0.5 * dt;
 	double vA_abs_dz = abs(par.vA_infty()) / abs(z.at(1) - z.at(0));
 
 #pragma omp parallel for
@@ -75,7 +74,6 @@ void Waves::evolve_f_in_z(const size_t& number_of_operators, const double& t_now
 }
 
 void Waves::evolve_f_in_p(const size_t& number_of_operators, const double& t_now) {
-	double dt_half = 0.5 * dt;
 
 #pragma omp parallel for
 	for (int iz = 1; iz < z_size - 1; ++iz) {
@@ -125,7 +123,6 @@ void Waves::evolve_f_in_p(const size_t& number_of_operators, const double& t_now
 
 void Waves::evolve_waves_in_z(const size_t& number_of_operators) {
 	double vA_abs_dz = abs(par.vA_infty()) / abs(z.at(1) - z.at(0));
-	double dt_half = 0.5 * dt;
 
 #pragma omp parallel for
 	for (size_t ip = 0; ip < p_size - 1; ++ip) {
