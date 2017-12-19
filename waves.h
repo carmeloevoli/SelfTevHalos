@@ -17,7 +17,6 @@
 #include "TAxis.h"
 #include "TGrid2D.h"
 #include "units.h"
-#include "analytical_solution.h"
 #include "params.h"
 
 class Waves {
@@ -44,6 +43,15 @@ public:
 	void dump(const double& t);
 	void dump_rates(const double& t);
 
+	//diffusion.cpp
+	void compute_D_zz();
+	void compute_dfdz();
+
+	//evolutors.cpp
+	void evolve_f_in_z(const size_t& number_of_operators, const double& t_now);
+	void evolve_f_in_p(const size_t& number_of_operators, const double& t_now);
+	void evolve_waves_in_z(const size_t& number_of_operators);
+	void evolve_waves(const size_t& number_of_operators);
 
 
 	//	void compute_total_energy(const size_t& counter, const double& dt);
@@ -107,11 +115,15 @@ public:
 //	}
 
 private:
+	Params par;
 	double dt = double();
+	double dz = double();
 	size_t z_size = size_t();
 	size_t p_size = size_t();
-	Params params;
-//
+
+	double factor_damping = pow(2. * par.ck(), -1.5) * par.vA_infty();
+	double factor_growth = 2. * M_PI / 3. * c_light * par.vA_infty() / par.magnetic_energy_density();
+
 //	double injected_now = 0;
 //	double injected_before = 0;
 //

@@ -3,7 +3,7 @@
 #define sgn(A) ((A < 0.) ? -1. : 1.)
 
 Waves::Waves() {
-	params.print();
+	par.print();
 }
 
 Waves::~Waves() {
@@ -20,32 +20,33 @@ void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
 	z.build_lin_axis(-halo_size, halo_size, z_size);
 	this->z_size = z.get_size();
 	z.set_reference_value(0);
+	dz = fabs(z.at(1) - z.at(0));
 	z.show_axis("z", kpc);
 }
 
 double Waves::compute_constant_CR_source_term_1D() {
-	double I = I_of_alpha(params.alpha(), params.source_pmin() / electron_mass_c, params.source_cutoff() / electron_mass_c);
-	double out = params.spin_down_luminosity() * pow2(1. + params.age() / params.source_tdecay());
+	double I = I_of_alpha(par.alpha(), par.source_pmin() / electron_mass_c, par.source_cutoff() / electron_mass_c);
+	double out = par.spin_down_luminosity() * pow2(1. + par.age() / par.source_tdecay());
 	double R = 1. * pc; // TODO move to params
 	out /= 4.0 * pow2(M_PI) * c_light * pow4(electron_mass_c) * pow2(R) * I;
 	return out;
 }
 
 double Waves::compute_constant_CR_source_term_3D() {
-	double I = I_of_alpha(params.alpha(), params.source_pmin() / electron_mass_c, params.source_cutoff() / electron_mass_c);
-	double out = params.spin_down_luminosity() * pow2(1. + params.age() / params.source_tdecay());
+	double I = I_of_alpha(par.alpha(), par.source_pmin() / electron_mass_c, par.source_cutoff() / electron_mass_c);
+	double out = par.spin_down_luminosity() * pow2(1. + par.age() / par.source_tdecay());
 	out /= 4. * M_PI * c_light * pow4(electron_mass_c) * I;
 	return out;
 }
 
 void Waves::build_CR_source_term() {
 	Q_cr.set_grid_size(p.get_size(), z.get_size());
-	double q0 = (params.do_3D()) ? compute_constant_CR_source_term_3D() : compute_constant_CR_source_term_1D();
+	double q0 = (par.do_3D()) ? compute_constant_CR_source_term_3D() : compute_constant_CR_source_term_1D();
 	for (size_t ip = 0; ip < p.get_size(); ++ip) {
-		double F = spectrum(p.at(ip), params.alpha(), params.source_pmin(), params.source_cutoff());
+		double F = spectrum(p.at(ip), par.alpha(), par.source_pmin(), par.source_cutoff());
 		for (size_t iz = 0; iz < z.get_size(); ++iz) {
 			double z_ = fabs(z.at(iz));
-			double G = (params.do_3D()) ? source_profile_3D(z_, params.source_size()) : source_profile_1D(z_, params.source_size());
+			double G = (par.do_3D()) ? source_profile_3D(z_, par.source_size()) : source_profile_1D(z_, par.source_size());
 			Q_cr.get(ip, iz) = q0 * G * F;
 		}
 	}
@@ -54,15 +55,15 @@ void Waves::build_CR_source_term() {
 
 void Waves::build_W_ISM() {
 	W_ISM.set_grid_size(p.get_size(), z.get_size());
-	double k_norm = 1. / larmor_radius(params.D_gal_ref(), params.magnetic_field());
-	double eta_B = c_light / 2. / k_norm / params.D_gal() * pow(k_norm / params.k0(), 2. / 3.);
+	double k_norm = 1. / larmor_radius(par.D_gal_ref(), par.magnetic_field());
+	double eta_B = c_light / 2. / k_norm / par.D_gal() * pow(k_norm / par.k0(), 2. / 3.);
 	std::cout << " - eta_B = " << eta_B << "\n";
 	for (size_t ip = 0; ip < p.get_size(); ++ip) {
 		for (size_t iz = 0; iz < z.get_size(); ++iz) {
-			double value = 2.0 * eta_B / 3.0 / params.k0();
-			double k = 1. / larmor_radius(p.at(ip), params.magnetic_field());
-			if (k > params.k0())
-				value *= pow(k / params.k0(), -5. / 3.);
+			double value = 2.0 * eta_B / 3.0 / par.k0();
+			double k = 1. / larmor_radius(p.at(ip), par.magnetic_field());
+			if (k > par.k0())
+				value *= pow(k / par.k0(), -5. / 3.);
 			W_ISM.get(ip, iz) = value;
 		}
 	}
@@ -101,7 +102,7 @@ void Waves::build_D_zz() {
 void Waves::build_v_A() {
 	v_A.set_grid_size(1, z.get_size());
 	for (size_t j = 0; j < z.get_size(); ++j) {
-		v_A.get(j) = sgn(z.at(j)) * params.vA_infty();
+		v_A.get(j) = sgn(z.at(j)) * par.vA_infty();
 	}
 	v_A.show_grid("v_A", km / s);
 }
@@ -114,7 +115,7 @@ void Waves::build_energy_losses() {
 		energy_density += 0.30 * eV / cm3 * S_i(20 * K, gamma_e); // IR
 		energy_density += 0.30 * eV / cm3 * S_i(5000 * K, gamma_e); // star
 		//energy_density += 0.10 * eV / cm3 * S_i(20000 * K, gamma_e); // UV
-		energy_density += params.magnetic_energy_density();
+		energy_density += par.magnetic_energy_density();
 		dp_dt.get(ip) = -4. / 3. * sigma_th * energy_density * pow2(gamma_e);
 	}
 	dp_dt.show_grid("dp_dt", 1.);
