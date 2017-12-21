@@ -28,7 +28,7 @@ void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
 double Waves::compute_constant_CR_source_term_1D() {
 	double I = I_of_alpha(par.alpha(), par.source_pmin() / electron_mass_c, par.source_cutoff() / electron_mass_c);
 	double out = par.spin_down_luminosity() * pow2(1. + par.age() / par.source_tdecay());
-	double R = 1. * pc; // TODO move to params
+	double R = 0.5 * pc; // TODO move to params
 	out /= 4.0 * pow2(M_PI) * c_light * pow4(electron_mass_c) * pow2(R) * I;
 	return out;
 }
