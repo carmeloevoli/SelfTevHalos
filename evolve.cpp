@@ -90,6 +90,17 @@ void Waves::test_boundary_conditions() {
 	std::cout << " -- total CRs at border : " << value << "\n";
 }
 
+void Waves::test_courant_conditions() {
+	double dt_dz2 = dt / pow2(dz);
+	double beta_max = 0;
+	for (size_t ip = 0; ip < p.get_size(); ++ip)
+		for (size_t iz = 0; iz < z.get_size(); ++iz) {
+			double beta = D_zz.get(ip, iz) * dt_dz2;
+			beta_max = std::max(beta, beta_max);
+		}
+	std::cout << " -- max CFL for diffusion " << beta_max << "\n";
+}
+
 void Waves::evolve(const double& dt, const int& max_counter, const int& dump_counter) {
 	set_dt(dt);
 	print_counter2time(max_counter, dump_counter);
@@ -98,8 +109,9 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
 	while (counter < max_counter) {
 		counter++;
 		evolve_f_in_z(1, counter * dt);
+		//evolve_f_in_z_explicit(1, counter * dt);
 		//evolve_f_in_p(2, counter * dt);
-		if (counter > 10000 && par.do_selfgeneration()) {
+		if ((double)counter * dt > kyr && par.do_selfgeneration()) {
 			compute_dfdz();
 			//evolve_waves_advectice(1);
 			evolve_waves(1);
@@ -109,6 +121,7 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
 			print_status(counter, start);
 			test_total_energy(counter, dt);
 			test_boundary_conditions();
+			test_courant_conditions();
 			dump(counter * dt);
 		} // if
 	} // while
