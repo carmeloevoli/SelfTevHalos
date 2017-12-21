@@ -49,6 +49,8 @@ public:
 
 	//evolutors.cpp
 	void evolve_f_in_z(const size_t& number_of_operators, const double& t_now);
+	void evolve_f_in_z_1D(const size_t& number_of_operators, const double& t_now);
+	void evolve_f_in_z_3D(const size_t& number_of_operators, const double& t_now);
 	void evolve_f_in_z_explicit(const size_t& number_of_operators, const double& t_now);
 	void evolve_f_in_p(const size_t& number_of_operators, const double& t_now);
 	void evolve_waves_in_z(const size_t& number_of_operators);

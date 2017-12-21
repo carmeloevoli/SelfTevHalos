@@ -240,21 +240,26 @@ def plot_fcr_spectrum():
 
 def plot_fcr_profile():
     
-    filename = 'output/fcr_test_1D_1_t_1_nz_1001_np_20.txt'
+    filename = 'output/fcr_test_3D_0_t_1_nz_401_np_20.txt'
     read_profile_at_p(filename, 2, 1e5, 'r', True)
     read_profile_at_p(filename, 2, 1e4, 'b', True)
     read_profile_at_p(filename, 2, 1e3, 'm', True)
 
+    filename = 'output/fcr_test_3D_0_t_2_nz_401_np_20.txt'
+    read_profile_at_p(filename, 2, 1e5, 'r:', True)
+    read_profile_at_p(filename, 2, 1e4, 'b:', True)
+    read_profile_at_p(filename, 2, 1e3, 'm:', True)
+    
 #    filename = 'output/fcr_test_1D_1_t_4_nz_1001_np_20.txt'
 #    read_profile_at_p(filename, 2, 1e5, 'r:', True)
 #    read_profile_at_p(filename, 2, 1e3, 'b:', True)
     
     #plt.xscale('log')
-    plt.xlim([-5, 5])
+    plt.xlim([0, 10])
     plt.xlabel(r'z [pc]', fontsize=28)
     
     #plt.yscale('log')
-    plt.ylim([0.8, 1])
+    #plt.ylim([0.8, 1])
     plt.ylabel(r'f(z) [au]', fontsize=28)
     
     #z = np.logspace(-1, 3, 100)
@@ -650,7 +655,7 @@ def plotit():
     #plotname = plot_wave_spectrum()
     #plotname = plot_wave_profile()
     #plotname = plot_cascade_timescale()
-    plotname = plot_dzz_spectrum()
+    #plotname = plot_dzz_spectrum()
     #plotname = plot_dzz_profile()
     #plotname = plot_dzz_withtime()
     #plotname = plot_wave_profile()
@@ -659,7 +664,7 @@ def plotit():
     #plot_giovanni()
     #plotname = plot_Jcr_spectrum()
     #plotname = plot_fcr_spectrum()
-    #plotname = plot_fcr_profile()
+    plotname = plot_fcr_profile()
     #plotname = plot_dfdz_spectrum()
     #plotname = plot_dfdz_profile()
     #plotname = plot_flux_profile()

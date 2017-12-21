@@ -18,7 +18,7 @@ void Waves::build_p_axis(const double& p_min, const double& p_max, const size_t&
 }
 
 void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
-	z.build_lin_axis(-halo_size, halo_size, z_size);
+	z.build_lin_axis(0, halo_size, z_size);
 	this->z_size = z.get_size();
 	z.set_reference_value(0);
 	z.show_axis("z", kpc);

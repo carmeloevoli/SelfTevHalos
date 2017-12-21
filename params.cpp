@@ -1,12 +1,12 @@
 #include "params.h"
 
 Params::Params() {
-	_init_filename = "test_1D_1";
+	_init_filename = "test_3D_0";
 	_correlation_length = 10. * parsec;
 	_k0 = 1. / _correlation_length;
 	_source_cutoff = 100. * TeV_c;
 	_source_pmin = 1 * GeV_c;
-	_source_size = 0.05 * pc;
+	_source_size = 0.1 * pc;
 	_source_tdecay = 8 * kyr;
 	_magnetic_field = 1.0 * microgauss;
 	_magnetic_energy_density = pow2(_magnetic_field) / 2. / vacuum_permeability;
@@ -18,8 +18,8 @@ Params::Params() {
 	_spin_down_luminosity = 3.8e34 * erg / s;
 	_D_gal = 5e28 * cm2 / s;
 	_D_gal_ref = 3 * GeV_c;
-	_do_selfgeneration = true;
-	_do_3d = false;
+	_do_selfgeneration = false;
+	_do_3d = true;
 }
 
 void Params::print() {
@@ -38,6 +38,8 @@ void Params::print() {
 	std::cout << "source t_decay = " << _source_tdecay / kyr << " kyr \n";
 	std::cout << "source age = " << _age / kyr << " kyr \n";
 	std::cout << "luminosity = " << _spin_down_luminosity / (erg / s) << " erg/s \n";
+	std::cout << "do 3D? " << _do_3d << "\n";
+	std::cout << "do self-generation? " << _do_selfgeneration << "\n";
 	std::cout << "\n";
 }
 

@@ -1,3 +1,10 @@
+# Plots
+plots/*.pdf
+plots/*.png
+
+# Build
+build/
+
 # Prerequisites
 *.d
 
