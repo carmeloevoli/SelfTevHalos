@@ -49,6 +49,7 @@ public:
 
 	//evolutors.cpp
 	void evolve_f_in_z(const size_t& number_of_operators, const double& t_now);
+	void evolve_f_in_z_explicit(const size_t& number_of_operators, const double& t_now);
 	void evolve_f_in_p(const size_t& number_of_operators, const double& t_now);
 	void evolve_waves_in_z(const size_t& number_of_operators);
 	void evolve_waves(const size_t& number_of_operators);
@@ -62,6 +63,7 @@ public:
 	double compute_source_luminosity();
 	void test_total_energy(const size_t& counter, const double& dt);
 	void test_boundary_conditions();
+	void test_courant_conditions();
 	void evolve(const double& dt, const int& max_counter, const int& dump_counter);
 
 private:
