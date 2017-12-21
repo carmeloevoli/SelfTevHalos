@@ -22,6 +22,7 @@ void Waves::dump(const double& t) {
 			outfile << D_zz.get(ip, iz) / (pow2(cm) / s) << " ";
 			outfile << df_dz.get(ip, iz) / (1. / pow3(GeV_c) / pow3(meter) / kpc) << " ";
 			outfile << D_zz.get(ip, iz) * df_dz.get(ip, iz) / (1. / pow3(GeV_c) / pow2(meter) / s) << " ";
+			outfile << W_sg.get(ip, iz) << " ";
 			outfile << "\n";
 		}
 	outfile.close();
