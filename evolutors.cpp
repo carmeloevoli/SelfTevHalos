@@ -3,6 +3,36 @@
 
 #define OMP_NUM_THREADS 4
 
+void Waves::evolve_f_in_z_explicit(const size_t& number_of_operators, const double& t_now) {
+	double vA_abs_dz = abs(par.vA_infty()) / abs(z.at(1) - z.at(0));
+	double dt_dz2 = dt / pow2(dz);
+
+#pragma omp parallel for
+	for (int ip = 0; ip < p_size - 1; ++ip) {
+		std::vector<double> fcr_up(z_size, 0.0);
+		for (int iz = 1; iz < z_size - 1; ++iz) {
+			double Dz = D_zz.get(ip, iz);
+			double DzUp = (iz < z_size - 1) ? D_zz.get(ip, iz + 1) : Dz;
+			double DzDo = (iz > 0) ? D_zz.get(ip, iz - 1) : Dz;
+
+			double UZ = 0.5 + (0.25 * (DzUp - DzDo) + Dz) * dt_dz2;
+			double CZ = 2.0 * Dz * dt_dz2;
+			double LZ = 0.5 - (0.25 * (DzUp - DzDo) - Dz) * dt_dz2;
+			double Q = Q_cr.get(ip, iz) * source_evolution(t_now, par.source_tdecay());
+
+			//fcr_up.at(iz) = UZ * f_cr.get(ip, iz + 1) - CZ * f_cr.get(ip, iz) + LZ * f_cr.get(ip, iz - 1);
+			//fcr_up.at(iz) += dt * Q / (double) number_of_operators;
+			fcr_up.at(iz) = f_cr.get(ip, iz);
+			fcr_up.at(iz) += dt * Q / (double) number_of_operators;
+			fcr_up.at(iz) += 0.25 * dt_dz2 * (DzUp - DzDo) * (f_cr.get(ip, iz + 1) - f_cr.get(ip, iz - 1));
+			fcr_up.at(iz) += dt_dz2 * Dz * (f_cr.get(ip, iz + 1) -2.0 * f_cr.get(ip, iz) + f_cr.get(ip, iz - 1));
+		}
+		for (int iz = 1; iz < z_size - 1; ++iz) {
+			f_cr.get(ip, iz) = std::max(fcr_up.at(iz), 0.);
+		}
+	}
+}
+
 void Waves::evolve_f_in_z(const size_t& number_of_operators, const double& t_now) {
 	double vA_abs_dz = abs(par.vA_infty()) / abs(z.at(1) - z.at(0));
 
