@@ -83,7 +83,7 @@ void Waves::test_boundary_conditions() {
 	double value = 0;
 	for (size_t ip = 0; ip < p.get_size(); ++ip) {
 		value += fabs(f_cr.get(ip, z_size - 1));
-		value += fabs(f_cr.get(ip, 0));
+		//value += fabs(f_cr.get(ip, 0));
 	}
 	for (size_t iz = 0; iz < z.get_size(); ++iz)
 		value += fabs(f_cr.get(p_size - 1, iz));
@@ -111,10 +111,10 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
 		evolve_f_in_z(1, counter * dt);
 		//evolve_f_in_z_explicit(1, counter * dt);
 		//evolve_f_in_p(2, counter * dt);
-		if ((double)counter * dt > kyr && par.do_selfgeneration()) {
-			compute_dfdz();
-			//evolve_waves_advectice(1);
-			evolve_waves(1);
+		compute_dfdz();
+		if ((double)counter * dt > 0.5 * kyr && par.do_selfgeneration()) {
+			evolve_waves_in_z(1);
+			//evolve_waves(1);
 			compute_D_zz();
 		}
 		if (counter % dump_counter == 0) {
@@ -123,6 +123,7 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
 			test_boundary_conditions();
 			test_courant_conditions();
 			dump(counter * dt);
+			dump_analytical_test(counter * dt);
 		} // if
 	} // while
 	print_status(counter, start);
