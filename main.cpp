@@ -18,6 +18,7 @@ int main() {
 	W->build_D_zz();
 	W->build_v_A();
 	W->build_energy_losses();
+	W->build_analytical_solution();
 
 	W->dump(0);
 	W->print_status(0, time(NULL));

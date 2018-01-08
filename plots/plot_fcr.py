@@ -220,10 +220,15 @@ def plot_fcr_spectrum():
     alpha = 3
     p = np.logspace(-2, 6, 100)
     
-    filename = 'output/fcr_test_1D_1_t_1_nz_1001_np_20.txt'
+    filename = 'output/fcr_test_3D_0_t_1_nz_401_np_20.txt'
     read_spectrum_at_z(filename, 2,    5, alpha, 'y')
     read_spectrum_at_z(filename, 2,   10, alpha, 'g')
-    read_spectrum_at_z(filename, 2,   20, alpha, 'r')
+    read_spectrum_at_z(filename, 2,   50, alpha, 'r')
+
+    filename = 'output/fcr_test_3D_0_t_30_nz_401_np_20.txt'
+    read_spectrum_at_z(filename, 2,    5, alpha, 'y:')
+    read_spectrum_at_z(filename, 2,   10, alpha, 'g:')
+    read_spectrum_at_z(filename, 2,   50, alpha, 'r:')
 
     plt.xscale('log')
     #plt.xlim([1e2, 1e5])
@@ -236,19 +241,17 @@ def plot_fcr_spectrum():
     p = np.logspace(2, 5, 100)
     #plt.plot(p, 0.5e-11 * (p / 1e4)**(-3.5), 'k:')
     #plt.plot(p, 1.0e-7 * (p / 1e2)**(-1.5), 'k:')
-    return 'fcr.pdf'
+    return 'fcr_spectrum.pdf'
 
 def plot_fcr_profile():
     
     filename = 'output/fcr_test_3D_0_t_1_nz_401_np_20.txt'
     read_profile_at_p(filename, 2, 1e5, 'r', True)
-    read_profile_at_p(filename, 2, 1e4, 'b', True)
-    read_profile_at_p(filename, 2, 1e3, 'm', True)
+    read_profile_at_p(filename, 2, 1e2, 'm', True)
 
-    filename = 'output/fcr_test_3D_0_t_2_nz_401_np_20.txt'
+    filename = 'output/fcr_test_3D_0_t_30_nz_401_np_20.txt'
     read_profile_at_p(filename, 2, 1e5, 'r:', True)
-    read_profile_at_p(filename, 2, 1e4, 'b:', True)
-    read_profile_at_p(filename, 2, 1e3, 'm:', True)
+    read_profile_at_p(filename, 2, 1e2, 'm:', True)
     
 #    filename = 'output/fcr_test_1D_1_t_4_nz_1001_np_20.txt'
 #    read_profile_at_p(filename, 2, 1e5, 'r:', True)
@@ -281,14 +284,17 @@ def plot_giovanni():
 
 def plot_dzz_profile():
 
-    filename = 'output/fcr_test_1D_1_t_59_nz_1001_np_20.txt'
-    read_profile_at_p(filename, 3, 1e2, 'y', False)
-    read_profile_at_p(filename, 3, 1e3, 'g', False)
-    read_profile_at_p(filename, 3, 1e4, 'r', False)
-    read_profile_at_p(filename, 3, 1e5, 'b', False)
+    filename = 'output/fcr_test_3D_2_t_59_nz_401_np_20.txt'
+    read_profile_at_p(filename, 3, 1e5, 'y', True)
+    #read_profile_at_p(filename, 3, 1e3, 'g', True)
+    #read_profile_at_p(filename, 3, 1e4, 'r', True)
+    #read_profile_at_p(filename, 3, 1e5, 'b', True)
+
+    filename = 'output/fcr_test_3D_2_t_10_nz_401_np_20.txt'
+    read_profile_at_p(filename, 3, 1e5, 'b:', True)
 
     plt.xlabel(r'z [kpc]', fontsize=38)
-    #plt.xlim([0,10])
+    plt.xlim([0, 10])
     #plt.xscale('log')
 
     plt.ylabel(r'D(z) [$10^{28}$ cm$^2$/s]', fontsize=38)
@@ -330,23 +336,15 @@ def plot_dzz_withtime():
 def plot_dzz_spectrum():
     alpha = 0 # -1. / 3.
 
-    filename = 'output/fcr_test_1D_1_t_2_nz_101_np_20.txt'
+    filename = 'output/fcr_test_3D_1_t_6_nz_401_np_20.txt'
     #read_spectrum_at_z(filename, 3,    -1, alpha, 'r:')
     #read_spectrum_at_z(filename, 3,  -0.2, alpha, 'b:')
     #read_spectrum_at_z(filename, 3,  -0.1, alpha, 'g:')
     #read_spectrum_at_z(filename, 3,     0, alpha, 'y')
-    #read_spectrum_at_z(filename, 3,   0.1, alpha, 'g')
+    read_spectrum_at_z(filename, 3,   0.1, alpha, 'g')
     #read_spectrum_at_z(filename, 3,   0.2, alpha, 'b')
-    read_spectrum_at_z(filename, 3,     1, alpha, 'r')
+    read_spectrum_at_z(filename, 3,     10, alpha, 'r')
     
-    filename = 'output/fcr_test_1D_1_t_2_nz_201_np_20.txt'
-    read_spectrum_at_z(filename, 3,     1, alpha, 'b')
-
-    filename = 'output/fcr_test_1D_1_t_2_nz_401_np_20.txt'
-    read_spectrum_at_z(filename, 3,     1, alpha, 'm')
-
-    filename = 'output/fcr_test_1D_1_t_2_nz_801_np_20.txt'
-    read_spectrum_at_z(filename, 3,     1, alpha, 'c')
     
     #read_spectrum_at_z(filename, 3,    10, alpha, 'm')
     #read_spectrum_at_z(filename, 3,    50, alpha, 'm')
@@ -443,14 +441,20 @@ def plot_dfdz_spectrum():
     plt.ylabel(r'p3 df/dz []',fontsize=28)
 
 def plot_dfdz_profile():
-    filename = 'output/fcr_test_1D_1_t_3_nz_1001_np_20.txt'
-    read_profile_at_p(filename, 4, 1e2, 'g', True)
-    read_profile_at_p(filename, 4, 1e3, 'c', True)
-    read_profile_at_p(filename, 4, 1e4, 'b', True)
-    read_profile_at_p(filename, 4, 1e5, 'm', True)
+    filename = 'output/fcr_test_3D_1_t_0.1_nz_401_np_20.txt'
+    ##    read_profile_at_p(filename, 4, 1e2, 'g', True)
+    #read_profile_at_p(filename, 4, 1e3, 'c', True)
+    #read_profile_at_p(filename, 4, 1e4, 'b', True)
+    read_profile_at_p(filename, 4, 1e5, 'm', False)
 
+    filename = 'output/fcr_test_3D_1_t_1_nz_401_np_20.txt'
+    read_profile_at_p(filename, 4, 1e5, 'b', False)
+
+    filename = 'output/fcr_test_3D_1_t_2_nz_401_np_20.txt'
+    read_profile_at_p(filename, 4, 1e5, 'r', False)
+    
     #plt.xscale('log')
-    plt.xlim([-5, 5])
+    plt.xlim([0, 50])
     plt.xlabel(r'z [kpc]',fontsize=28)
     
     plt.yscale('log')
@@ -603,31 +607,50 @@ def plot_positrons():
 
     return 'positron_spectrum.pdf'
 
-def plot_analytical_solution():
-    alpha = 3.5
-
-    filename = 'output/fcr_test_phase_3_t_0.2_nz_1001_np_160.txt'
-    read_spectrum_at_z(filename, 4, .3, alpha, 'g')
-    read_spectrum_at_z(filename, 5, .3, alpha, 'g:')
-
-    filename = 'output/fcr_test_phase_3_t_0.4_nz_1001_np_160.txt'
-    read_spectrum_at_z(filename, 4, .3, alpha, 'r')
-    read_spectrum_at_z(filename, 5, .3, alpha, 'r:')
+def plot_electrons():
+    alpha = 3
+    plot_data('data/ele_AMS02.txt', alpha, 'g', 'AMS-02', 1)
     
-    filename = 'output/fcr_test_phase_3_t_0.6_nz_1001_np_160.txt'
-    read_spectrum_at_z(filename, 4, .3, alpha, 'm')
-    read_spectrum_at_z(filename, 5, .3, alpha, 'm:')
+    f0 = 2e-1
+    p0 = 10.
+    gamma = 3.2
+    p = np.logspace(1, 5)
+    f = f0 * (p / p0)**(-gamma)
+
+    plt.plot(p, p**alpha * f)
+
+    plt.xscale('log')
+    plt.xlim([1e1, 1e5])
+    
+    plt.yscale('log')
+    plt.ylim([1e1, 1e3])
+    
+    return 'electron_spectrum.pdf'
+
+def plot_analytical_solution():
+
+    filename = 'output/test_test_3D_2_t_0.1_nz_401_np_20.txt'
+    read_profile_at_p(filename, 2, 1e2, 'g', False)
+    read_profile_at_p(filename, 3, 1e2, 'r:', False)
+
+#read_spectrum_at_z(filename, 2, 10, alpha, 'r')
+#    read_spectrum_at_z(filename, 3, 10, alpha, 'r:')
+    
+    #    read_spectrum_at_z(filename, 2, 30, alpha, 'm')
+    #read_spectrum_at_z(filename, 3, 30, alpha, 'm:')
 
     #read_spectrum_at_z(filename, 10, 10,    alpha, 'g')
     #read_spectrum_at_z(filename, 11, 10, alpha, 'g:')
 
-    plt.ylim([1e-10, 1e-1])
+    #plt.ylim([1e-10, 1e-1])
 
 #filename = 'output/fcr_tested_3_t_5_nz_3001_np_160.txt'
 #   read_spectrum_at_z(filename, 2, 10, alpha, 'r')
 
     plt.xscale('log')
     plt.yscale('log')
+
+    return 'analytical_solution.pdf'
 
 def plot_energy_density():
     filename = 'output/fcr_test_phase_9_t_324_nz_3001_np_160.txt'
@@ -656,7 +679,7 @@ def plotit():
     #plotname = plot_wave_profile()
     #plotname = plot_cascade_timescale()
     #plotname = plot_dzz_spectrum()
-    #plotname = plot_dzz_profile()
+    plotname = plot_dzz_profile()
     #plotname = plot_dzz_withtime()
     #plotname = plot_wave_profile()
     #plot_dzz_integral()
@@ -664,7 +687,7 @@ def plotit():
     #plot_giovanni()
     #plotname = plot_Jcr_spectrum()
     #plotname = plot_fcr_spectrum()
-    plotname = plot_fcr_profile()
+    #plotname = plot_fcr_profile()
     #plotname = plot_dfdz_spectrum()
     #plotname = plot_dfdz_profile()
     #plotname = plot_flux_profile()
@@ -673,6 +696,7 @@ def plotit():
     #plotname = plot_source_profile()
     #plotname = plot_timescales()
     #plotname = plot_positrons()
+    #plotname = plot_electrons()
     #plotname = plot_analytical_solution()
     #plotname = plot_energy_density()
 

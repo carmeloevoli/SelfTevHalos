@@ -1,7 +1,7 @@
 #include "params.h"
 
 Params::Params() {
-	_init_filename = "test_3D_0";
+	_init_filename = "test_3D_2";
 	_correlation_length = 10. * parsec;
 	_k0 = 1. / _correlation_length;
 	_source_cutoff = 100. * TeV_c;
@@ -18,7 +18,7 @@ Params::Params() {
 	_spin_down_luminosity = 3.8e34 * erg / s;
 	_D_gal = 5e28 * cm2 / s;
 	_D_gal_ref = 3 * GeV_c;
-	_do_selfgeneration = false;
+	_do_selfgeneration = true;
 	_do_3d = true;
 }
 

@@ -40,9 +40,13 @@ double Waves::compute_constant_CR_source_term_3D() {
 	return out;
 }
 
+double Waves::compute_constant_CR_source_term() {
+	return (par.do_3D()) ? compute_constant_CR_source_term_3D() : compute_constant_CR_source_term_1D();
+}
+
 void Waves::build_CR_source_term() {
 	Q_cr.set_grid_size(p.get_size(), z.get_size());
-	double q0 = (par.do_3D()) ? compute_constant_CR_source_term_3D() : compute_constant_CR_source_term_1D();
+	double q0 = compute_constant_CR_source_term();
 	for (size_t ip = 0; ip < p.get_size(); ++ip) {
 		double F = spectrum(p.at(ip), par.alpha(), par.source_pmin(), par.source_cutoff());
 		for (size_t iz = 0; iz < z.get_size(); ++iz) {
@@ -120,4 +124,8 @@ void Waves::build_energy_losses() {
 		dp_dt.get(ip) = -4. / 3. * sigma_th * energy_density * pow2(gamma_e);
 	}
 	dp_dt.show_grid("dp_dt", 1.);
+}
+
+void Waves::build_analytical_solution() {
+	solution.set_params(par, compute_constant_CR_source_term());
 }
