@@ -29,6 +29,25 @@ void Waves::dump(const double& t) {
 	std::cout << "... done!" << "\n";
 }
 
+void Waves::dump_analytical_test(const double& t) {
+	std::string filename = generate_output_filename("test", t);
+	std::cout << "dumping analytical solution on this file: " << filename << " ... ";
+	std::ofstream outfile(filename.c_str());
+	outfile << "# z [kpc]  p [GeV/c]  fcr []  fcr_a [] \n";
+	outfile << std::scientific << std::setprecision(4);
+	double units = (1. / pow3(GeV_c) / pow3(meter));
+	for (size_t iz = 0; iz < z.get_size(); ++iz)
+		for (size_t ip = 0; ip < p.get_size(); ++ip) {
+			outfile << z.at(iz) / pc << " ";
+			outfile << p.at(ip) / GeV_c << " ";
+			outfile << f_cr.get(ip, iz) / units << " ";
+			outfile << solution.f(z.at(iz), t, p.at(ip)) / units << " ";
+			outfile << "\n";
+		}
+	outfile.close();
+	std::cout << "... done!" << "\n";
+}
+
 void Waves::dump_rates(const double& t) {
 	std::string filename = generate_output_filename("rates", t);
 	std::cout << "dumping rates on this file: " << filename << " ... ";
