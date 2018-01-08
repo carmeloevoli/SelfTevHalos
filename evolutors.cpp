@@ -108,7 +108,7 @@ void Waves::evolve_f_in_z_3D(const size_t& number_of_operators, const double& t_
 
 			double Dz_dz2 = Dz / pow2(dz);
 			double dDz_4_dz2 = (DzUp - DzDo) / 4. / pow2(dz);
-			double r = std::max(fabs(z.at(iz)), 0.2 * pc); // TODO smaller radius
+			double r = std::max(fabs(z.at(iz)), 0.01 * pc); // TODO smaller radius
 			double Dz_dz_r = Dz / dz / r;
 
 			double UZ = Dz_dz2 + dDz_4_dz2 + Dz_dz_r;
@@ -252,7 +252,8 @@ void Waves::evolve_waves(const size_t& number_of_operators) {
 			double Gamma_D_gal = factor_damping * pow(k_, 1.5) * sqrt(W_ISM.get(ip, iz));
 			double WGamma_CR = factor_growth / k_ * pow4(p.at(ip)) * df_dz.get(ip, iz);
 			double Q_w = WGamma_CR - Gamma_D * W_sg.get(ip, iz) + Gamma_D_gal * W_ISM.get(ip, iz);
-			double value = W_sg.get(ip, iz) + dt * Q_w;
+			double value = W_sg.get(ip, iz) + dt * Q_w / (double)number_of_operators;
+			//value = std::min(value, 1. / k_);
 			W_sg.get(ip, iz) = std::max(value, 0.);
 		}
 	}
