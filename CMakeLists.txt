@@ -18,6 +18,7 @@ set( CRWAVES_SRCS
      evolve.cpp
      main.cpp
      params.cpp
+     sources.cpp
      tridiag.cpp
      utilities.cpp
      waves.cpp

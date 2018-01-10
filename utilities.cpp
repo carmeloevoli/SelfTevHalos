@@ -49,18 +49,6 @@ double inverse_larmor_radius(const double& k, const double& B) {
 	return elementary_charge * B / k;
 }
 
-double spectrum(const double& p, const double& alpha, const double& p_min, const double& p_cutoff) {
-	return (p > p_min) ? pow(p / electron_mass_c, -alpha) * exp(-pow2(p / p_cutoff)) : 0.;
-}
-
-double source_profile_1D(const double& z, const double& size) {
-	return pow(2.0 * M_PI * pow2(size), -1. / 2.) * exp(-0.5 * pow2(z / size));
-}
-
-double source_profile_3D(const double& z, const double& size) {
-	return pow(2.0 * M_PI * pow2(size), -3. / 2.) * exp(-0.5 * pow2(z / size));
-}
-
 double S_i(const double& T_i, const double& gamma_e) {
 	double value = 45. * pow2(electron_mass_c2) / 64. / pow2(M_PI) / pow2(k_boltzmann * T_i);
 	return value / (value + pow2(gamma_e));
