@@ -284,17 +284,17 @@ def plot_giovanni():
 
 def plot_dzz_profile():
 
-    filename = 'output/fcr_test_3D_2_t_59_nz_401_np_20.txt'
-    read_profile_at_p(filename, 3, 1e5, 'y', True)
+    filename = 'output/fcr_test_1D_0_t_20_nz_1201_np_96.txt'
+    read_profile_at_p(filename, 3, 1e4, 'y', False)
     #read_profile_at_p(filename, 3, 1e3, 'g', True)
     #read_profile_at_p(filename, 3, 1e4, 'r', True)
     #read_profile_at_p(filename, 3, 1e5, 'b', True)
 
-    filename = 'output/fcr_test_3D_2_t_10_nz_401_np_20.txt'
-    read_profile_at_p(filename, 3, 1e5, 'b:', True)
+    filename = 'output/fcr_test_1D_1_t_20_nz_1201_np_96.txt'
+    read_profile_at_p(filename, 3, 1e4, 'b:', False)
 
-    plt.xlabel(r'z [kpc]', fontsize=38)
-    plt.xlim([0, 10])
+    plt.xlabel(r'z [pc]', fontsize=38)
+    #plt.xlim([0, 10])
     #plt.xscale('log')
 
     plt.ylabel(r'D(z) [$10^{28}$ cm$^2$/s]', fontsize=38)
@@ -336,39 +336,31 @@ def plot_dzz_withtime():
 def plot_dzz_spectrum():
     alpha = 0 # -1. / 3.
 
-    filename = 'output/fcr_test_3D_1_t_6_nz_401_np_20.txt'
-    #read_spectrum_at_z(filename, 3,    -1, alpha, 'r:')
-    #read_spectrum_at_z(filename, 3,  -0.2, alpha, 'b:')
-    #read_spectrum_at_z(filename, 3,  -0.1, alpha, 'g:')
-    #read_spectrum_at_z(filename, 3,     0, alpha, 'y')
-    read_spectrum_at_z(filename, 3,   0.1, alpha, 'g')
-    #read_spectrum_at_z(filename, 3,   0.2, alpha, 'b')
-    read_spectrum_at_z(filename, 3,     10, alpha, 'r')
-    
-    
-    #read_spectrum_at_z(filename, 3,    10, alpha, 'm')
-    #read_spectrum_at_z(filename, 3,    50, alpha, 'm')
+    filename = 'output/fcr_test_1D_0_t_300_nz_1201_np_96.txt'
+    read_spectrum_at_z(filename, 3,   5, alpha, 'b')
+    read_spectrum_at_z(filename, 3,  10, alpha, 'r')
+    read_spectrum_at_z(filename, 3,  20, alpha, 'g')
 
-    #filename = 'output/fcr_test_1D_1_t_0_nz_2001_np_20.txt'
-    #read_spectrum_at_z(filename, 3,  1, alpha, 'g:')
-    #read_spectrum_at_z(filename, 3, 10, alpha, 'r:')
-    #read_spectrum_at_z(filename, 3, 20, alpha, 'b:')
+    filename = 'output/fcr_test_1D_0_t_300_nz_1201_np_96.txt'
+    read_spectrum_at_z(filename, 3,  5, alpha, 'b:')
+    read_spectrum_at_z(filename, 3, 10, alpha, 'r:')
+    read_spectrum_at_z(filename, 3, 20, alpha, 'g:')
 
     #plt.legend(['10 pc', '20 pc', '50 pc'], fontsize=22, loc='upper left', frameon=False)
 
-    #filename = 'output/fcr_test_1D_1_t_0_nz_2001_np_20.txt'
-    #read_spectrum_at_z(filename, 3, 10, alpha, 'k:')
+    filename = 'output/fcr_test_1D_0_t_0_nz_1201_np_96.txt'
+    read_spectrum_at_z(filename, 3, 10, alpha, 'k:')
     
     x = 2e4
     y = 3.2e27 * (100. / 20.)**(1./3.)
     y_err_hi = 1.4e27 * (100. / 20.)**(1./3.)
     y_err_lo = 1.0e27 * (100. / 20.)**(1./3.)
 
-    #plt.errorbar(x, x**alpha * y, yerr=y_err_lo, fmt='o', markersize='8', elinewidth=2, capsize=6, capthick=2, color='k')
+    plt.errorbar(x, x**alpha * y, yerr=y_err_lo, fmt='o', markersize='8', elinewidth=2, capsize=6, capthick=2, color='k')
 
     #plt.plot([5e4, 5e4], [1e20, 1e40], 'c:')
 
-    p = np.logspace(2,5,100)
+    p = np.logspace(3,6,100)
     
     c = 3e10 # cm / s
     rL = 3.1e18 * (p / 1e6)
@@ -678,8 +670,8 @@ def plotit():
     #plotname = plot_wave_spectrum()
     #plotname = plot_wave_profile()
     #plotname = plot_cascade_timescale()
-    #plotname = plot_dzz_spectrum()
-    plotname = plot_dzz_profile()
+    plotname = plot_dzz_spectrum()
+    #plotname = plot_dzz_profile()
     #plotname = plot_dzz_withtime()
     #plotname = plot_wave_profile()
     #plot_dzz_integral()

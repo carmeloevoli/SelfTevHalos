@@ -18,7 +18,10 @@ void Waves::build_p_axis(const double& p_min, const double& p_max, const size_t&
 }
 
 void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
-	z.build_lin_axis(0, halo_size, z_size);
+	if (par.do_3D())
+		z.build_lin_axis(0, halo_size, z_size);
+	else
+		z.build_lin_axis(-halo_size, halo_size, z_size);
 	this->z_size = z.get_size();
 	z.set_reference_value(0);
 	z.show_axis("z", kpc);
@@ -77,20 +80,6 @@ void Waves::build_v_A() {
 		v_A.get(j) = sgn(z.at(j)) * par.vA_infty();
 	}
 	v_A.show_grid("v_A", km / s);
-}
-
-void Waves::build_energy_losses() {
-	dp_dt.set_grid_size(p.get_size(), 1);
-	for (size_t ip = 0; ip < p.get_size(); ++ip) {
-		double gamma_e = p.at(ip) / electron_mass_c;
-		double energy_density = 0.26 * eV / cm3 * S_i(2.7 * K, gamma_e); // CMB
-		energy_density += 0.30 * eV / cm3 * S_i(20 * K, gamma_e); // IR
-		energy_density += 0.30 * eV / cm3 * S_i(5000 * K, gamma_e); // star
-		//energy_density += 0.10 * eV / cm3 * S_i(20000 * K, gamma_e); // UV
-		energy_density += par.magnetic_energy_density();
-		dp_dt.get(ip) = -4. / 3. * sigma_th * energy_density * pow2(gamma_e);
-	}
-	dp_dt.show_grid("dp_dt", 1.);
 }
 
 void Waves::build_analytical_solution() {

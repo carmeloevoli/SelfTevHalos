@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.6)
 
 set( CMAKE_VERBOSE_MAKEFILE off )
 set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
-set( CMAKE_CXX_COMPILER "/usr/local/Cellar/gcc/7.1.0/bin/g++-7" )
+set( CMAKE_CXX_COMPILER "/usr/local/Cellar/gcc/7.2.0_1/bin/g++-7" )
 set( CMAKE_CXX_FLAGS "-O3 -fopenmp" )
 set( CRWAVES_EXTRA_INCLUDES )
 set( CRWAVES_EXTRA_LIBRARIES )
@@ -14,6 +14,7 @@ include_directories( "${CMAKE_SOURCE_DIR}" )
 set( CRWAVES_SRCS 
      diffusion.cpp
      dump.cpp
+     energy_losses.cpp
      evolutors.cpp
      evolve.cpp
      main.cpp

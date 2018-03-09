@@ -1,13 +1,13 @@
 #include "params.h"
 
 Params::Params() {
-	_init_filename = "test_3D_2";
+	_init_filename = "test_1D_3";
 	_correlation_length = 10. * parsec;
 	_k0 = 1. / _correlation_length;
 	_source_cutoff = 100. * TeV_c;
 	_source_pmin = 1 * GeV_c;
 	_source_size = 0.1 * pc;
-	_source_tdecay = 8 * kyr;
+	_source_tdecay = 10 * kyr;
 	_magnetic_field = 1.0 * microgauss;
 	_magnetic_energy_density = pow2(_magnetic_field) / 2. / vacuum_permeability;
 	_ion_number_density = 1. / cm3;
@@ -19,7 +19,7 @@ Params::Params() {
 	_D_gal = 5e28 * cm2 / s;
 	_D_gal_ref = 3 * GeV_c;
 	_do_selfgeneration = true;
-	_do_3d = true;
+	_do_3d = false;
 }
 
 void Params::print() {

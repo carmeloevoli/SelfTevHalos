@@ -108,11 +108,11 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
 	size_t counter = 0;
 	while (counter < max_counter) {
 		counter++;
-		evolve_f_in_z(1, counter * dt);
+		evolve_f_in_z(2, counter * dt);
 		//evolve_f_in_z_explicit(1, counter * dt);
-		//evolve_f_in_p(2, counter * dt);
+		evolve_f_in_p(2, counter * dt);
 		compute_dfdz();
-		if ((double)counter * dt > 0.5 * kyr && par.do_selfgeneration()) {
+		if ((double)counter * dt > 0.1 * kyr && par.do_selfgeneration()) {
 			evolve_waves_in_z(1);
 			//evolve_waves(1);
 			compute_D_zz();
