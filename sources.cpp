@@ -33,32 +33,32 @@ double spectrum(const double& p, const double& alpha, const double& p_min, const
 }
 
 double Waves::compute_constant_CR_source_term_1D() {
-	double I = I_of_alpha(par.alpha(), par.source_pmin() / electron_mass_c, par.source_cutoff() / electron_mass_c);
-	double out = par.spin_down_luminosity() * pow2(1. + par.age() / par.source_tdecay());
-	double R = 1 * pc; // TODO move to params
+	double I = I_of_alpha(par.alpha.get(), par.source_pmin.get() / electron_mass_c, par.source_cutoff.get() / electron_mass_c);
+	double out = par.spin_down_luminosity.get() * pow2(1. + par.age.get() / par.source_tdecay.get());
+	double R = par.tube_radius.get();
 	out /= 4.0 * pow2(M_PI) * c_light * pow4(electron_mass_c) * pow2(R) * I;
 	return out;
 }
 
 double Waves::compute_constant_CR_source_term_3D() {
-	double I = I_of_alpha(par.alpha(), par.source_pmin() / electron_mass_c, par.source_cutoff() / electron_mass_c);
-	double out = par.spin_down_luminosity() * pow2(1. + par.age() / par.source_tdecay());
+	double I = I_of_alpha(par.alpha.get(), par.source_pmin.get() / electron_mass_c, par.source_cutoff.get() / electron_mass_c);
+	double out = par.spin_down_luminosity.get() * pow2(1. + par.age.get() / par.source_tdecay.get());
 	out /= 4. * M_PI * c_light * pow4(electron_mass_c) * I;
 	return out;
 }
 
 double Waves::compute_constant_CR_source_term() {
-	return (par.do_3D()) ? compute_constant_CR_source_term_3D() : compute_constant_CR_source_term_1D();
+	return (par.do_3D.get()) ? compute_constant_CR_source_term_3D() : compute_constant_CR_source_term_1D();
 }
 
 void Waves::build_CR_source_term() {
 	Q_cr.set_grid_size(p.get_size(), z.get_size());
 	double q0 = compute_constant_CR_source_term();
 	for (size_t ip = 0; ip < p.get_size(); ++ip) {
-		double F = spectrum(p.at(ip), par.alpha(), par.source_pmin(), par.source_cutoff());
+		double F = spectrum(p.at(ip), par.alpha.get(), par.source_pmin.get(), par.source_cutoff.get());
 		for (size_t iz = 0; iz < z.get_size(); ++iz) {
 			double z_ = fabs(z.at(iz));
-			double G = (par.do_3D()) ? source_profile_3D(z_, par.source_size()) : source_profile_1D(z_, par.source_size());
+			double G = (par.do_3D.get()) ? source_profile_3D(z_, par.source_size.get()) : source_profile_1D(z_, par.source_size.get());
 			Q_cr.get(ip, iz) = q0 * G * F;
 		}
 	}

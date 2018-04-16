@@ -5,12 +5,15 @@
 #include "waves.h"
 
 int main() {
-	Waves * W = new Waves();
 
-	std::cout << " ... init\n";
+	Params par;
+
+	Waves * W = new Waves(par);
+
+	std::cout << " ... init \n";
 
 	W->build_z_axis(100 * pc, 1201);
-	W->build_p_axis(1e3 * GeV_c, 1e6 * GeV_c, 32 * 3);
+	W->build_p_axis(1e2 * GeV_c, 1e6 * GeV_c, 64 * 4);
 	W->build_CR_source_term();
 	W->build_W_ISM();
 	W->build_W_sg();
@@ -18,16 +21,16 @@ int main() {
 	W->build_D_zz();
 	W->build_v_A();
 	W->build_energy_losses();
-	W->build_analytical_solution();
+	//W->build_analytical_solution();
 
 	W->dump(0);
 	W->print_status(0, time(NULL));
 
 	std::cout << " ... evolve\n";
 
-	W->evolve(0.1 * year, 100 * 1000 * 1000, 100 * 100);
+	//W->evolve(0.1 * year, 1000 * 1000, 100 * 10);
 
-	std::cout << "... done! \n";
+	std::cout << " ... done! \n";
 
 	delete W;
 	return 0;

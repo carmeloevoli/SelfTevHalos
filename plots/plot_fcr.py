@@ -103,8 +103,6 @@ def read_energy_density_at_z(filename, column, z_search):
     
     return 4.0 * 3.14 * epsilon * dlnp * 1e3
 
-
-
 def read_v_at_z(filename, z_search, alpha, linestyle):
     z, p, f, D, dfdz = np.loadtxt(filename, skiprows=1, usecols=(0,1,2,3,4), unpack=True)
     if (z_search < min(z) or z_search > max(z)):
@@ -271,16 +269,6 @@ def plot_fcr_profile():
 #plt.legend(['10 GeV', '100 GeV', '1 TeV', '10 TeV'], fontsize=25, loc='upper right', frameon=False)
 
     return 'fcr_profile.pdf'
-
-def plot_giovanni():
-
-    filename = 'output/fcr_geminga_0_t_300_nz_3001_np_160.txt'
-    read_v_at_z(filename, 5,  0, 'y')
-    read_v_at_z(filename, 10, 0, 'g')
-    read_v_at_z(filename, 20, 0, 'r')
-    plt.xscale('log')
-    plt.yscale('log')
-
 
 def plot_dzz_profile():
 
@@ -474,8 +462,7 @@ def plot_wave_profile():
 
     plt.xlim([-10, 10])
     return 'wave_profile.pdf'
-
-
+i
 def plot_Gamma_spectrum():
     alpha = 0
     read_spectrum_at_z('output/wab_test_7_t_0_nz_1281_nk_576.txt', 8, 0.0, alpha, 'y')

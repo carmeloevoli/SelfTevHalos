@@ -22,7 +22,7 @@
 
 class Waves {
 public:
-	Waves();
+	Waves(const Params& par_);
 	virtual ~Waves();
 
 	//waves.cpp
@@ -54,6 +54,7 @@ public:
 	void compute_dfdz_3D();
 
 	//evolutors.cpp
+	double Gamma_Damping(const double& k, const double& W);
 	void evolve_f_in_z(const size_t& number_of_operators, const double& t_now);
 	void evolve_f_in_z_1D(const size_t& number_of_operators, const double& t_now);
 	void evolve_f_in_z_3D(const size_t& number_of_operators, const double& t_now);
@@ -85,8 +86,8 @@ private:
 	size_t z_size = size_t();
 	size_t p_size = size_t();
 
-	double factor_damping = pow(2. * par.ck(), -1.5) * par.vA_infty();
-	double factor_growth = 2. * M_PI / 3. * c_light * par.vA_infty() / par.magnetic_energy_density();
+	double factor_damping = pow(2. * par.ck.get(), -1.5) * par.vA_infty.get();
+	double factor_growth = 2. * M_PI / 3. * c_light * par.vA_infty.get() / par.magnetic_energy_density.get();
 
 	AnalyticSolution solution;
 	TAxis<double> p;

@@ -2,7 +2,7 @@
 
 std::string Waves::generate_output_filename(const std::string& s, const double& t) {
 	std::stringstream sstream;
-	sstream << "output/" << s << "_" << par.init_filename();
+	sstream << "output/" << s << "_" << par.init_filename.get();
 	sstream << "_t_" << t / kyr << "_nz_" << z.get_size() << "_np_" << p.get_size() << ".txt";
 	std::string out = sstream.str();
 	return out;
@@ -23,6 +23,7 @@ void Waves::dump(const double& t) {
 			outfile << df_dz.get(ip, iz) / (1. / pow3(GeV_c) / pow3(meter) / kpc) << " ";
 			outfile << D_zz.get(ip, iz) * df_dz.get(ip, iz) / (1. / pow3(GeV_c) / pow2(meter) / s) << " ";
 			outfile << W_sg.get(ip, iz) << " ";
+			outfile << Q_cr.get(ip, iz) << " ";
 			outfile << "\n";
 		}
 	outfile.close();

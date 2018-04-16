@@ -1,45 +1,66 @@
 #include "params.h"
 
 Params::Params() {
-	_init_filename = "test_1D_3";
-	_correlation_length = 10. * parsec;
-	_k0 = 1. / _correlation_length;
-	_source_cutoff = 100. * TeV_c;
-	_source_pmin = 1 * GeV_c;
-	_source_size = 0.1 * pc;
-	_source_tdecay = 10 * kyr;
-	_magnetic_field = 1.0 * microgauss;
-	_magnetic_energy_density = pow2(_magnetic_field) / 2. / vacuum_permeability;
-	_ion_number_density = 1. / cm3;
-	_vA_infty = _magnetic_field / sqrt(vacuum_permeability * proton_mass * _ion_number_density);
-	_ck = 5.2e-2;
-	_alpha = 3.5;
-	_age = 340 * kyr;
-	_spin_down_luminosity = 3.8e34 * erg / s;
-	_D_gal = 5e28 * cm2 / s;
-	_D_gal_ref = 3 * GeV_c;
-	_do_selfgeneration = true;
-	_do_3d = false;
+	init_filename.set("pulsar_1D_5");
+	correlation_length.set(10. * parsec);
+	k0.set(1. / correlation_length.get());
+	source_cutoff.set(100. * TeV_c);
+	source_pmin.set(1 * GeV_c);
+	source_size.set(0.1 * pc);
+	source_tdecay.set(10 * kyr);
+	magnetic_field.set(1.0 * microgauss);
+	magnetic_energy_density.set(pow2(magnetic_field.get()) / 2. / vacuum_permeability);
+	ion_number_density.set(1 / cm3);
+	vA_infty.set(magnetic_field.get() / sqrt(vacuum_permeability * proton_mass * ion_number_density.get()));
+	ck.set(5.2e-2);
+	alpha.set(3.5);
+	age.set(340 * kyr);
+	spin_down_luminosity.set(3.8e34 * erg / s);
+	D_gal.set(5e28 * cm2 / s);
+	D_gal_ref.set(3 * GeV_c);
+	tube_radius.set(1 * pc);
+	do_selfgeneration.set(false);
+	do_3D.set(false);
+	do_kolmogorov.set(true);
+}
+
+Params::~Params() {
+}
+
+std::string Params::generate_output_filename() {
+	std::stringstream sstream;
+	sstream << "output/" << "par" << "_" << init_filename.get();
+	sstream << ".txt";
+	std::string out = sstream.str();
+	return out;
 }
 
 void Params::print() {
-	std::cout << "l0 = " << _correlation_length / kpc << " kpc \n";
-	std::cout << "k0 = " << _k0 / (1./kpc) << " kpc-1 \n";
-	std::cout << "vA = " << _vA_infty / (km / s) << " km/s \n";
-	std::cout << "B0 = " << _magnetic_field / muG << " muG \n";
-	std::cout << "U0 = " << _magnetic_energy_density / (eV / pow3(cm)) << " eV cm-3 \n";
-	std::cout << "D_Gal = " << _D_gal / (cm2 / s) << " cm2/s \n";
-	std::cout << "D_Gal_pref = " << _D_gal_ref / GeV_c << "\n";
-	std::cout << "ck = " << _ck << "\n";
-	std::cout << "injection slope = " << _alpha << "\n";
-	std::cout << "injection cutoff = " << _source_cutoff / TeV_c << " TeV/c \n";
-	std::cout << "injection pmin = " << _source_pmin / GeV_c << " GeV/c \n";
-	std::cout << "source size  = " << _source_size / pc << " pc \n";
-	std::cout << "source t_decay = " << _source_tdecay / kyr << " kyr \n";
-	std::cout << "source age = " << _age / kyr << " kyr \n";
-	std::cout << "luminosity = " << _spin_down_luminosity / (erg / s) << " erg/s \n";
-	std::cout << "do 3D? " << _do_3d << "\n";
-	std::cout << "do self-generation? " << _do_selfgeneration << "\n";
-	std::cout << "\n";
+	std::string filename = generate_output_filename();
+	std::cout << "dumping params on this file: " << filename << " ... ";
+	std::ofstream parfile(filename.c_str());
+	//std::cout << "filename = " << _init_filename << "\n";
+	parfile << "l0 = " << correlation_length.get() / kpc << " kpc \n";
+	parfile << "k0 = " << k0.get() / (1. / kpc) << " kpc-1 \n";
+	parfile << "vA = " << vA_infty.get() / (km / s) << " km/s \n";
+	parfile << "B0 = " << magnetic_field.get() / muG << " muG \n";
+	parfile << "U0 = " << magnetic_energy_density.get() / (eV / pow3(cm)) << " eV cm-3 \n";
+	parfile << "D_Gal = " << D_gal.get() / (cm2 / s) << " cm2/s \n";
+	parfile << "D_Gal_pref = " << D_gal_ref.get() / GeV_c << "\n";
+	parfile << "ck = " << ck.get() << "\n";
+	parfile << "injection slope = " << alpha.get() << "\n";
+	parfile << "injection cutoff = " << source_cutoff.get() / TeV_c << " TeV/c \n";
+	parfile << "injection pmin = " << source_pmin.get() / GeV_c << " GeV/c \n";
+	parfile << "source size  = " << source_size.get() / pc << " pc \n";
+	parfile << "source t_decay = " << source_tdecay.get() / kyr << " kyr \n";
+	parfile << "source age = " << age.get() / kyr << " kyr \n";
+	parfile << "luminosity = " << spin_down_luminosity.get() / (erg / s) << " erg/s \n";
+	parfile << "tube radius = " << tube_radius.get() / pc << " pc\n";
+	parfile << "do 3D? " << do_3D.get() << "\n";
+	parfile << "do self-generation? " << do_selfgeneration.get() << "\n";
+	parfile << "do Kolmogorov? " << do_kolmogorov.get() << "\n";
+	parfile << "\n";
+	parfile.close();
+	std::cout << "done!\n";
 }
 
