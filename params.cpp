@@ -1,7 +1,7 @@
 #include "params.h"
 
 Params::Params() {
-	init_filename.set("pulsar_1D_5");
+	init_filename.set("fiducial");
 	correlation_length.set(10. * parsec);
 	k0.set(1. / correlation_length.get());
 	source_cutoff.set(100. * TeV_c);
@@ -16,9 +16,9 @@ Params::Params() {
 	alpha.set(3.5);
 	age.set(340 * kyr);
 	spin_down_luminosity.set(3.8e34 * erg / s);
+	tube_radius.set(1 * pc);
 	D_gal.set(5e28 * cm2 / s);
 	D_gal_ref.set(3 * GeV_c);
-	tube_radius.set(1 * pc);
 	do_selfgeneration.set(false);
 	do_3D.set(false);
 	do_kolmogorov.set(true);
@@ -39,14 +39,13 @@ void Params::print() {
 	std::string filename = generate_output_filename();
 	std::cout << "dumping params on this file: " << filename << " ... ";
 	std::ofstream parfile(filename.c_str());
-	//std::cout << "filename = " << _init_filename << "\n";
 	parfile << "l0 = " << correlation_length.get() / kpc << " kpc \n";
 	parfile << "k0 = " << k0.get() / (1. / kpc) << " kpc-1 \n";
 	parfile << "vA = " << vA_infty.get() / (km / s) << " km/s \n";
 	parfile << "B0 = " << magnetic_field.get() / muG << " muG \n";
 	parfile << "U0 = " << magnetic_energy_density.get() / (eV / pow3(cm)) << " eV cm-3 \n";
 	parfile << "D_Gal = " << D_gal.get() / (cm2 / s) << " cm2/s \n";
-	parfile << "D_Gal_pref = " << D_gal_ref.get() / GeV_c << "\n";
+	parfile << "D_Gal_pref = " << D_gal_ref.get() / GeV_c << " GeV_c\n";
 	parfile << "ck = " << ck.get() << "\n";
 	parfile << "injection slope = " << alpha.get() << "\n";
 	parfile << "injection cutoff = " << source_cutoff.get() / TeV_c << " TeV/c \n";
