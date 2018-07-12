@@ -1,9 +1,18 @@
 # Plots
 plots/*.pdf
 plots/*.png
+plots/*.txt
+plots/*~
+plots/*.pyc
+plots/output
 
 # Build
 build/
+
+# GUI
+.cproject
+.project
+.settings/
 
 # Prerequisites
 *.d
