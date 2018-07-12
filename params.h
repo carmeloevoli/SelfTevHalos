@@ -33,12 +33,9 @@ public:
 	std::string generate_output_filename();
 
 	Param<double> correlation_length;
-	Param<double> k0;
 	Param<double> D_gal;
 	Param<double> D_gal_ref;
-	Param<double> vA_infty;
 	Param<double> magnetic_field;
-	Param<double> magnetic_energy_density;
 	Param<double> ck;
 	Param<double> alpha;
 	Param<double> ion_number_density;

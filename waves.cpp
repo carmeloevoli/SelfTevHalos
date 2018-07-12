@@ -5,6 +5,12 @@
 Waves::Waves(const Params& par_) {
 	par = par_;
 	par.print();
+
+	magnetic_energy_density = pow2(par.magnetic_field.get()) / 2. / vacuum_permeability;
+	vA_infty = par.magnetic_field.get() / std::sqrt(vacuum_permeability * proton_mass * par.ion_number_density.get());
+	k0 = 1. / par.correlation_length.get();
+	factor_damping = pow(2. * par.ck.get(), -1.5) * vA_infty;
+	factor_growth = 2. * M_PI / 3. * c_light * vA_infty / magnetic_energy_density;
 }
 
 Waves::~Waves() {
@@ -32,14 +38,14 @@ void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
 void Waves::build_W_ISM() {
 	W_ISM.set_grid_size(p.get_size(), z.get_size());
 	double k_norm = 1. / larmor_radius(par.D_gal_ref.get(), par.magnetic_field.get());
-	double eta_B = c_light / 2. / k_norm / par.D_gal.get() * pow(k_norm / par.k0.get(), 2. / 3.);
+	double eta_B = c_light / 2. / k_norm / par.D_gal.get() * pow(k_norm / k0, 2. / 3.);
 	std::cout << " - eta_B = " << eta_B << "\n";
 	for (size_t ip = 0; ip < p.get_size(); ++ip) {
 		for (size_t iz = 0; iz < z.get_size(); ++iz) {
-			double value = 2.0 * eta_B / 3.0 / par.k0.get();
+			double value = 2.0 * eta_B / 3.0 / k0;
 			double k = 1. / larmor_radius(p.at(ip), par.magnetic_field.get());
-			if (k > par.k0.get())
-				value *= pow(k / par.k0.get(), -5. / 3.);
+			if (k > k0)
+				value *= pow(k / k0, -5. / 3.);
 			W_ISM.get(ip, iz) = value;
 		}
 	}
@@ -79,7 +85,7 @@ void Waves::build_v_A() {
 	v_A.set_grid_size(1, z.get_size());
 	for (size_t j = 0; j < z.get_size(); ++j) {
 		//v_A.get(j) = sgn(z.at(j)) * par.vA_infty();
-		v_A.get(j) = std::tanh(z.at(j) / pc) * par.vA_infty.get();
+		v_A.get(j) = std::tanh(z.at(j) / pc) * vA_infty;
 	}
 	v_A.show_grid("v_A", km / s);
 }

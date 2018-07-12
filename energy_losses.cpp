@@ -13,7 +13,7 @@ void Waves::build_energy_losses() {
 		energy_density += 0.30 * eV / cm3 * S_i(20 * K, gamma_e); // IR
 		energy_density += 0.30 * eV / cm3 * S_i(5000 * K, gamma_e); // star
 		//energy_density += 0.10 * eV / cm3 * S_i(20000 * K, gamma_e); // UV
-		energy_density += par.magnetic_energy_density.get();
+		energy_density += magnetic_energy_density;
 		dp_dt.get(ip) = -4. / 3. * sigma_th * energy_density * pow2(gamma_e);
 	}
 	dp_dt.show_grid("dp_dt", 1.);

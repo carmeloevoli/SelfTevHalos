@@ -4,7 +4,7 @@
 #define OMP_NUM_THREADS 4
 
 void Waves::evolve_f_in_z_explicit(const size_t& number_of_operators, const double& t_now) {
-	double vA_abs_dz = abs(par.vA_infty.get()) / abs(z.at(1) - z.at(0));
+	double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
 	double dt_dz2 = dt / pow2(dz);
 
 #pragma omp parallel for
@@ -41,7 +41,7 @@ void Waves::evolve_f_in_z(const size_t& number_of_operators, const double& t_now
 }
 
 void Waves::evolve_f_in_z_1D(const size_t& number_of_operators, const double& t_now) {
-	double vA_abs_dz = abs(par.vA_infty.get()) / abs(z.at(1) - z.at(0));
+	double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
 
 #pragma omp parallel for
 	for (int ip = 0; ip < p_size - 1; ++ip) {
@@ -91,7 +91,7 @@ void Waves::evolve_f_in_z_1D(const size_t& number_of_operators, const double& t_
 }
 
 void Waves::evolve_f_in_z_3D(const size_t& number_of_operators, const double& t_now) {
-	double vA_abs_dz = abs(par.vA_infty.get()) / abs(z.at(1) - z.at(0));
+	double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
 
 #pragma omp parallel for
 	for (int ip = 0; ip < p_size - 1; ++ip) {
@@ -210,7 +210,7 @@ void Waves::evolve_waves_in_z(const size_t& number_of_operators) {
 }
 
 void Waves::evolve_waves_in_z_1D(const size_t& number_of_operators) {
-	double vA_abs_dz = abs(par.vA_infty.get()) / abs(z.at(1) - z.at(0));
+	double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
 
 #pragma omp parallel for
 	for (size_t ip = 0; ip < p_size - 1; ++ip) {
@@ -267,7 +267,7 @@ void Waves::evolve_waves_in_z_1D(const size_t& number_of_operators) {
 }
 
 void Waves::evolve_waves_in_z_3D(const size_t& number_of_operators) {
-	double vA_abs_dz = abs(par.vA_infty.get()) / abs(z.at(1) - z.at(0));
+	double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
 
 #pragma omp parallel for
 	for (size_t ip = 0; ip < p_size - 1; ++ip) {

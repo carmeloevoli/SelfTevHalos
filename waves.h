@@ -86,8 +86,12 @@ private:
 	size_t z_size = size_t();
 	size_t p_size = size_t();
 
-	double factor_damping = pow(2. * par.ck.get(), -1.5) * par.vA_infty.get();
-	double factor_growth = 2. * M_PI / 3. * c_light * par.vA_infty.get() / par.magnetic_energy_density.get();
+	double magnetic_energy_density = 0;
+	double vA_infty = 0;
+	double k0 = 0;
+
+	double factor_damping = 0;
+	double factor_growth = 0;
 
 	AnalyticSolution solution;
 	TAxis<double> p;

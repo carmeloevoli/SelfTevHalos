@@ -1,31 +1,7 @@
-#!/bin/bash/python
 import matplotlib.pyplot as plt
-from matplotlib import rc, rcParams
 import numpy as np
-
-# PLOT STYLE
-rc('text', usetex=True)
-rc('font', family='serif')
-rc('font', serif='Helvetica Neue')
-rc('xtick', labelsize=18)
-rc('ytick', labelsize=18)
-rcParams['legend.numpoints'] = 1
-rcParams['lines.linewidth'] = 4
-rcParams['figure.autolayout'] = True
-
-fig = plt.figure(figsize=(9.2, 8.6))
-ax = fig.add_subplot(1, 1, 1)
-
-for axis in ['top', 'bottom', 'left', 'right']:
-    ax.spines[axis].set_linewidth(1.5)
-
-ax.minorticks_on()
-ax.tick_params('both', length=15, width=1.5, which='major', pad=6)
-ax.tick_params('both', length=10, width=1.3, which='minor', pad=6)
-
-plt.xticks(size=30)
-plt.yticks(size=30)
-# END PLOT STYLE
+import plot_lib as pl
+import matplotlib.cm as cm
 
 def find_nearest(array,value):
     idx = (np.abs(array-value)).argmin()
@@ -44,36 +20,97 @@ def read_spectrum_at_pz(filename, column, p_search):
     f = f[ind]
     return z, f
 
-energy = 1e2
-plot_title = '100 GeV'
-plot_filename = 'heatmap_100_GeV.png'
+def calc_heatmap(filename_id, energy):
+    f = open(filename_id + '_' + str(energy) + '_heatmap.txt', 'wb')
+
+    tt = np.linspace(0, 200, 101)
+    rr = np.linspace(0, 200, 101)
+    
+    for t_ in tt:
+        filename = 'output/fcr_' + filename_id + '_t_' + str(int(t_)) + '_nz_1201_np_256.txt'
+        print filename
+        x, y = read_spectrum_at_pz(filename, 3, energy)
+
+        for r_ in rr:
+            idx = (np.abs(x - r_)).argmin()
+            #dzz.append(np.log10(y[idx] / D_ISM))
+            f.write("%.4e   %.4e   %.4e\n" % (t_, r_, y[idx]))
+
+#calc_heatmap('new_geminga_0', 1e2)
+#calc_heatmap('new_geminga_0', 1e4)
+
+#calc_heatmap('new_geminga_5', 1e2)
+#calc_heatmap('new_geminga_5', 1e4)
+
+#calc_heatmap('new_geminga_6', 1e2)
+#calc_heatmap('new_geminga_6', 1e4)
+
+#calc_heatmap('new_geminga_7', 1e2)
+#calc_heatmap('new_geminga_7', 1e4)
+
+#calc_heatmap('new_geminga_1', 1e2)
+#calc_heatmap('new_geminga_1', 1e4)
+
+#calc_heatmap('new_geminga_2', 1e2)
+#calc_heatmap('new_geminga_2', 1e4)
+
+#calc_heatmap('new_geminga_3', 1e2)
+#calc_heatmap('new_geminga_3', 1e4)
+
+fig, ax = pl.set_plot_style()
+
+filename = 'new_geminga_5_10000.0_heatmap.txt'
+plot_filename = 'D_5_1e4_GeV.png'
+energy = 1e4
+
+###
+
 D_ISM = 5e28 * (energy / 3.)**(1./3.)
 
 ax.set_ylabel(r't [kyr]', fontsize = 30, labelpad = 10)
 ax.set_xlabel(r'r [pc]', fontsize = 30, labelpad = 15)
-ax.set_title(plot_title, fontsize = 30)
+#ax.set_title(plot_title, fontsize = 30)
 
-tt = np.linspace(0, 340, 171)
-rr = np.linspace(0,  50, 171)
+t_, r_, dzz_ = np.loadtxt(filename, skiprows=0, usecols=(0,1,2), unpack=True)
 
-r_positron = 0.0
-t_positron = 40
-dt_positron = 1e3 * 3.14e7 # 1 kyr
+print len(dzz_)
 
-dzz = []
-r_p = []
-t_p = []
+tt = t_[0:10201:101]
+rr = r_[0:101]
 
-for t_ in tt:
-    filename = 'output/fcr_test_phase_8_t_' + str(int(t_)) + '_nz_1001_np_160.txt'
-    print filename
-    x, y = read_spectrum_at_pz(filename, 3, energy)
+log_dzz = np.reshape(np.log10(dzz_ / D_ISM), [len(rr), len(tt)])
 
-    for r_ in rr:
-        idx = (np.abs(x - r_)).argmin()
-        #print r_, x[idx], y[idx]
-        dzz.append(np.log10(y[idx]))
+##im = ax.pcolormesh(rr, tt, dzz, vmin=27, vmax=30, cmap='jet_r')
 
+##cmap='RdBu' coolwarm RdYlBu
+#clb = fig.colorbar(im)
+#clb.set_label(r'log D / D$_{ISM}$', fontsize = 28)
+
+im = plt.imshow(log_dzz, interpolation='bilinear', cmap=cm.winter, origin='lower', extent=[0, 100, 0, 100], vmax=0, vmin=-3)
+
+CS = plt.contour(tt, rr, log_dzz, levels=[-2, -1.3, -1, -0.3, 0], colors='white', linestyles='-', linewidhts=8)
+
+fmt = {}
+strs = [r'1\%', r'5\%', r'10\%', '50\%', '1']
+for l, s in zip(CS.levels, strs):
+    fmt[l] = s
+
+plt.clabel(CS, CS.levels[::1], fmt=fmt, fontsize=25) 
+#plt.clabel(CS, inline=1, fontsize=25, fmt=fmt)
+
+#im = ax.pcolormesh(rr, tt, log_dzz, vmin=-3, vmax=0, cmap='jet_r')
+
+plt.text(60, 90, 'E = 10 TeV', fontsize=27, color='w')
+
+ax.axis('tight')
+
+#plt.show()
+
+plt.savefig(plot_filename)
+
+#r_positron = 0.0
+#t_positron = 40
+#dt_positron = 1e3 * 3.14e7 # 1 kyr
 #if t_ > t_positron:
 #        idx = (np.abs(x - r_positron)).argmin()
 #       dzz_positron = y[idx]
@@ -83,19 +120,7 @@ for t_ in tt:
 #            r_p.append(r_positron)
 #            t_p.append(t_)
 #            print t_positron / 3.14e7, dzz_positron, delta_r, r_positron
-
-dzz = np.reshape(dzz, [len(rr), len(tt)])
-
-#fig, ax = plt.subplots()
-im = ax.pcolormesh(rr, tt, dzz, vmin=25.5, vmax=29.5, cmap='jet_r')
-#cmap='RdBu' coolwarm RdYlBu
-clb = fig.colorbar(im)
-clb.set_label(r'log D [cm$^2$ s$^{-1}$]', fontsize = 28)
 #ax.plot(r_p, t_p, 'white')
 #ax.set_xlim([0,100])
 #ax.set_ylim([0,100])
 
-ax.axis('tight')
-
-#plt.show()
-plt.savefig(plot_filename, format='png', dpi=300)
