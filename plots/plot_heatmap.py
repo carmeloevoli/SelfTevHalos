@@ -23,8 +23,8 @@ def read_spectrum_at_pz(filename, column, p_search):
 def calc_heatmap(filename_id, energy):
     f = open(filename_id + '_' + str(energy) + '_heatmap.txt', 'wb')
 
-    tt = np.linspace(0, 200, 101)
-    rr = np.linspace(0, 200, 101)
+    tt = np.linspace(0, 300, 151)
+    rr = np.linspace(0, 200, 151)
     
     for t_ in tt:
         filename = 'output/fcr_' + filename_id + '_t_' + str(int(t_)) + '_nz_1201_np_256.txt'
@@ -57,13 +57,13 @@ def calc_heatmap(filename_id, energy):
 #calc_heatmap('new_geminga_3', 1e2)
 #calc_heatmap('new_geminga_3', 1e4)
 
+#############################################
 fig, ax = pl.set_plot_style()
 
-filename = 'new_geminga_5_10000.0_heatmap.txt'
-plot_filename = 'D_5_1e4_GeV.png'
+filename = 'new_geminga_0_10000.0_heatmap.txt'
+plot_filename = 'D_0_1e4_GeV.png'
 energy = 1e4
-
-###
+#############################################
 
 D_ISM = 5e28 * (energy / 3.)**(1./3.)
 
@@ -75,8 +75,8 @@ t_, r_, dzz_ = np.loadtxt(filename, skiprows=0, usecols=(0,1,2), unpack=True)
 
 print len(dzz_)
 
-tt = t_[0:10201:101]
-rr = r_[0:101]
+tt = t_[0:151*151:151]
+rr = r_[0:151]
 
 log_dzz = np.reshape(np.log10(dzz_ / D_ISM), [len(rr), len(tt)])
 
@@ -86,7 +86,7 @@ log_dzz = np.reshape(np.log10(dzz_ / D_ISM), [len(rr), len(tt)])
 #clb = fig.colorbar(im)
 #clb.set_label(r'log D / D$_{ISM}$', fontsize = 28)
 
-im = plt.imshow(log_dzz, interpolation='bilinear', cmap=cm.winter, origin='lower', extent=[0, 100, 0, 100], vmax=0, vmin=-3)
+im = plt.imshow(log_dzz, interpolation='bilinear', cmap=cm.winter, origin='lower', extent=[0, 100, 0, 200], vmax=0, vmin=-3)
 
 CS = plt.contour(tt, rr, log_dzz, levels=[-2, -1.3, -1, -0.3, 0], colors='white', linestyles='-', linewidhts=8)
 
@@ -95,14 +95,17 @@ strs = [r'1\%', r'5\%', r'10\%', '50\%', '1']
 for l, s in zip(CS.levels, strs):
     fmt[l] = s
 
-plt.clabel(CS, CS.levels[::1], fmt=fmt, fontsize=25) 
+plt.clabel(CS, CS.levels[::1], fmt=fmt, fontsize=25, inline=1) 
 #plt.clabel(CS, inline=1, fontsize=25, fmt=fmt)
 
 #im = ax.pcolormesh(rr, tt, log_dzz, vmin=-3, vmax=0, cmap='jet_r')
 
-plt.text(60, 90, 'E = 10 TeV', fontsize=27, color='w')
+#plt.text(60, 90, 'E = 10 TeV', fontsize=27, color='w')
 
+ax.set_xlim([0,100])
 ax.axis('tight')
+
+plt.xlim([0, 100])
 
 #plt.show()
 
