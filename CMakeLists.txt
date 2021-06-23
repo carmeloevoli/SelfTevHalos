@@ -1,10 +1,9 @@
 project(CRWAVES CXX)
-
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.19)
 
 set( CMAKE_VERBOSE_MAKEFILE off )
 set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
-set( CMAKE_CXX_COMPILER "/usr/local/Cellar/gcc/7.2.0_1/bin/g++-7" )
+set( CMAKE_CXX_COMPILER "/usr/local/bin/g++-10" )
 set( CMAKE_CXX_FLAGS "-O3 -fopenmp" )
 set( CRWAVES_EXTRA_INCLUDES )
 set( CRWAVES_EXTRA_LIBRARIES )
