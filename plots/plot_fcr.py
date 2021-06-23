@@ -1,193 +1,287 @@
-#!/bin/bash/python
+import matplotlib
+matplotlib.use('MacOSX')
 import matplotlib.pyplot as plt
-from matplotlib import rc, rcParams
+plt.style.use('./my.mplstyle')
+import utilities as utils
 import numpy as np
 
-# PLOT STYLE
-rc('text', usetex=True)
-rc('font', family='serif')
-rc('font', serif='Helvetica Neue')
-rc('xtick', labelsize=18)
-rc('ytick', labelsize=18)
-rcParams['legend.numpoints'] = 1
-rcParams['lines.linewidth'] = 3
-rcParams['figure.autolayout'] = True
+def plot_fcr_spectrum():
+    fig = plt.figure(figsize=(10.5,8))
+    ax = fig.add_subplot(111)
 
-fig = plt.figure(figsize=(9.0, 8.6))
-ax = fig.add_subplot(1, 1, 1)
-
-for axis in ['top', 'bottom', 'left', 'right']:
-    ax.spines[axis].set_linewidth(1.5)
-
-ax.minorticks_on()
-ax.tick_params('both', length=15, width=1.5, which='major', pad=10)
-ax.tick_params('both', length=0,  width=1.3, which='minor', pad=10)
-
-plt.xticks(size=35)
-plt.yticks(size=35)
-# END PLOT STYLE
-
-def plot_data(filename, slope_plot, color, label, norm):
-    T, y, err_y_lo, err_y_up = np.loadtxt(filename,skiprows=2,usecols=(0,3,8,9),unpack=True)
-    y_err = [T**slope_plot * err_y_lo, T**slope_plot * err_y_up]
-    plt.errorbar(T, T**slope_plot * y, yerr=y_err, fmt='o', markersize='8', elinewidth=2, capsize=6, capthick=2, color=color)
-
-def read_spectrum_at_pz(filename, column, z_search, p_search):
-    z, p, f = np.loadtxt(filename, skiprows=1, usecols=(0,1,column), unpack=True)
-    if (p_search < min(p) or p_search > max(p)):
-        print "WARNING: p is out of range!"
-    if (z_search < min(z) or z_search > max(z)):
-        print "WARNING: p is out of range!"
-    best_p = -1000.0
-    for i in range(len(p)):
-        if abs(p[i] - p_search) < abs(best_p - p_search):
-            best_p = p[i]
-    ind = (p == best_p).nonzero()
-    z = z[ind]
-    f = f[ind]
-
-    best_z = -1000.0
-    for i in range(len(z)):
-        if abs(z[i] - z_search) < abs(best_z - z_search):
-            best_z = z[i]
-    ind = (z == best_z).nonzero()
-    f = f[ind]
-    print 'f is',f
-    return f
-
-def read_profile_at_p(filename, column, p_search, linestyle, donormalize):
-    z, p, f = np.loadtxt(filename, skiprows=1, usecols=(0,1,column), unpack=True)
-    if (p_search < min(p) or p_search > max(p)):
-        print "WARNING: p is out of range!"
-    best_p = -1000.0
-    for i in range(len(p)):
-        if abs(p[i] - p_search) < abs(best_p - p_search):
-            best_p = p[i]
-    ind = (p == best_p).nonzero()
-    z = z[ind]
-    f = f[ind]
-    print "plot f in the range = ", min(f), max(f), np.mean(f)
-    if donormalize:
-        plt.plot(z, f / max(f), linestyle)
-    else:
-        plt.plot(z, f, linestyle)
-
-def read_spectrum_at_z(filename, column, z_search, alpha, linestyle):
-    z, p, f = np.loadtxt(filename, skiprows=1, usecols=(0,1,column), unpack=True)
-    if (z_search < min(z) or z_search > max(z)):
-        print "WARNING: z is out of range!"
-    best_z = -1000.0
-    for i in range(len(z)):
-        if abs(z[i] - z_search) < abs(best_z - z_search):
-            best_z = z[i]
-    ind = (z == best_z).nonzero()
-    p = p[ind] # GeV/c
-    f = f[ind] # GeV^-1 m^-2 s^-1
-    print "plot f in the range = ", min(f), max(f), np.mean(f)
-    plt.plot(p, p**alpha * f, linestyle)
-
-def read_energy_density_at_z(filename, column, z_search):
-    z, p, f = np.loadtxt(filename, skiprows=1, usecols=(0,1,column), unpack=True)
-    if (z_search < min(z) or z_search > max(z)):
-        print "WARNING: z is out of range!"
-    best_z = -1000.0
-    for i in range(len(z)):
-        if abs(z[i] - z_search) < abs(best_z - z_search):
-            best_z = z[i]
-    ind = (z == best_z).nonzero()
-    p = p[ind] # GeV/c
-    f = f[ind] # GeV/c^-3 m^-3
-
-    epsilon = np.sum(p**4 * f)
-    dlnp = np.log(p[1] / p[0])
+    alpha = 3
+    p = np.logspace(-2, 6, 100)
     
-    return 4.0 * 3.14 * epsilon * dlnp * 1e3
+    filename = 'output/fcr_test_3.5_kol_t_5_nz_1201_np_256.txt'
+    utils.read_spectrum_at_z(ax, filename, 2,  5, alpha, 'y')
+    utils.read_spectrum_at_z(ax, filename, 2, 10, alpha, 'g')
+    utils.read_spectrum_at_z(ax, filename, 2, 50, alpha, 'r')
 
-def read_v_at_z(filename, z_search, alpha, linestyle):
-    z, p, f, D, dfdz = np.loadtxt(filename, skiprows=1, usecols=(0,1,2,3,4), unpack=True)
-    if (z_search < min(z) or z_search > max(z)):
-        print "WARNING: z is out of range!"
-    best_z = -1000.0
-    for i in range(len(z)):
-        if abs(z[i] - z_search) < abs(best_z - z_search):
-            best_z = z[i]
-    ind = (z == best_z).nonzero()
-    p = p[ind] # GeV/c
-    f = f[ind] # GeV^-1 m^-2 s^-1
-    D = D[ind]
-    dfdz = dfdz[ind]
-    plt.plot(p, p**alpha * D / f * dfdz / 3e21, linestyle)
+    ax.legend(['z=5', 'z=10', 'z=50'])
 
-def read_timescale(filename, n_z, n_p, alpha, color):
-    z, p, f = np.loadtxt(filename, skiprows=1, usecols=(0,1,3), unpack=True)
-    dz = (max(z) - min(z)) / n_z
-    print max(z), dz
-    counter = 0
-    p_x = np.zeros(n_p)
-    I_y = np.zeros(n_p)
-    I_small_y = np.zeros(n_p)
-    for iz in range(n_z):
-        for ip in range(n_p):
-            p_x[ip] = p[counter]
-            I_y[ip] += abs(z[counter]) / f[counter]
-            if abs(z[counter]) > 2.0:
-                I_small_y[ip] += abs(z[counter]) / f[counter]
-            #print counter, z[counter]
-            counter = counter + 1
-    plt.plot(p_x, p_x**alpha * dz * I_y * 31., color=color)
-    plt.plot(p_x, p_x**alpha * dz * I_small_y * 31., color=color, linestyle=':')
+#    filename = 'output/fcr_test_3D_0_t_30_nz_401_np_20.txt'
+#    read_spectrum_at_z(filename, 2,    5, alpha, 'y:')
+#    read_spectrum_at_z(filename, 2,   10, alpha, 'g:')
+#    read_spectrum_at_z(filename, 2,   50, alpha, 'r:')
 
-def read_jcr_at_z(filename, column, z_search, alpha, linestyle):
-    z, p, f = np.loadtxt(filename, skiprows=1, usecols=(0,1,column), unpack=True)
-    if (z_search < min(z) or z_search > max(z)):
-        print "WARNING: z is out of range!"
-    best_z = -1000.0
-    for i in range(len(z)):
-        if abs(z[i] - z_search) < abs(best_z - z_search):
-            best_z = z[i]
-    ind = (z == best_z).nonzero()
-    p = p[ind] # GeV/c
-    E = p # GeV
-    f = f[ind] # m^-2 s^-1
-    EJ = f
-    print "plot J in the range = ", min(EJ), max(EJ),np.mean(EJ)
-    plt.plot(E, E**alpha * EJ, linestyle)
+    ax.set_xscale('log')
+    ax.set_xlim([1e2, 1e6])
+    ax.set_xlabel(r'p [GeV/c]',fontsize=30)
+    
+    ax.set_yscale('log')
+    ax.set_ylim([1e-10, 1e-4])
+    ax.set_ylabel(r'p$^3$ f(p) [m$^{-3}$]',fontsize=30)
 
-def analytical_solution_profile(H, D, vA): # kpc - 1e28 cm2/s - km/s
-    xi = 0.03 * vA * H / D
-    z = np.linspace(-H,H,100)
-    f = (1. - np.exp(-xi * (1. - abs(z) / H))) / (1. - np.exp(-xi))
-    plt.plot(z, f, 'k:')
+    p = np.logspace(2, 5, 100)
+    #plt.plot(p, 0.5e-11 * (p / 1e4)**(-3.5), 'k:')
+    #plt.plot(p, 1.0e-7 * (p / 1e2)**(-1.5), 'k:')
+    plt.savefig('fcr_spectrum.pdf', format='pdf', dpi=300)
 
-def kolmogorov_coefficient(D0, delta):
-    m_p = 0.938
-    p = np.logspace(-2,10,120)
-    E = np.sqrt(p * p + m_p * m_p)
-    beta = p / E
-    plt.plot(p, D0 * beta * p**delta, 'k:')
+def plot_fcr_profile():
+    fig = plt.figure(figsize=(10.5,8))
+    ax = fig.add_subplot(111)
 
-def advection_timescale(vA, H):
-    p = np.logspace(-3,10,100)
-    t = ((H * 3.086e+19) / (vA * 1e3))  * (p / p)
-    plt.plot(p, t / 3.14e13, 'k:')
+    filename = 'output/fcr_test_3.5_kol_t_5_nz_1201_np_256.txt'
+    utils.read_profile_at_p(ax, filename, 2, 1e5, 'r', True)
+    utils.read_profile_at_p(ax, filename, 2, 1e2, 'm', True)
 
-def read_ratio_at_z(fn0, fn, column, z_search, alpha, linestyle):
-    z, p, f0 = np.loadtxt(fn0, skiprows=1, usecols=(0,1,column), unpack=True)
-    z, p, f  = np.loadtxt(fn,  skiprows=1, usecols=(0,1,column), unpack=True)
-    if (z_search < min(z) or z_search > max(z)):
-        print "WARNING: z is out of range!"
-    best_z = -1000.0
-    for i in range(len(z)):
-        if abs(z[i] - z_search) < abs(best_z - z_search):
-            best_z = z[i]
-    ind = (z == best_z).nonzero()
-    p  = p[ind] # GeV/c
-    f0 = f0[ind] # GeV^-1 m^-2 s^-1
-    f  = f[ind]
-    print "plot f in the range = ", min(f), max(f)
-    print "plot f0 in the range = ", min(f0), max(f0)
-    plt.plot(p, (f - f0) / f0, linestyle)
+#    filename = 'output/fcr_test_3D_0_t_30_nz_401_np_20.txt'
+#    read_profile_at_p(filename, 2, 1e5, 'r:', True)
+#    read_profile_at_p(filename, 2, 1e2, 'm:', True)
+    
+#    filename = 'output/fcr_test_1D_1_t_4_nz_1001_np_20.txt'
+#    read_profile_at_p(filename, 2, 1e5, 'r:', True)
+#    read_profile_at_p(filename, 2, 1e3, 'b:', True)
+    
+    #plt.xscale('log')
+    #plt.xlim([0, 10])
+    ax.set_xlabel(r'z [pc]', fontsize=28)
+    
+    #plt.yscale('log')
+    #plt.ylim([0.8, 1])
+    ax.set_ylabel(r'f(z) [au]', fontsize=28)
+    
+    #z = np.logspace(-1, 3, 100)
+    #plt.plot(z, np.exp(-0.5 * (z / 25.)**2), 'k--')
 
+#plt.legend(['10 GeV', '100 GeV', '1 TeV', '10 TeV'], fontsize=25, loc='upper right', frameon=False)
+
+    plt.savefig('fcr_profile.pdf', format='pdf', dpi=300)
+
+def plot_dzz_spectrum():
+    fig = plt.figure(figsize=(10.5,8))
+    ax = fig.add_subplot(111)
+
+    alpha = 0 # -1. / 3.
+
+    filename = 'output/fcr_test_3.5_kol_t_5_nz_1201_np_256.txt'
+    utils.read_spectrum_at_z(ax, filename, 3,   5, alpha, 'b')
+    utils.read_spectrum_at_z(ax, filename, 3,  10, alpha, 'r')
+    utils.read_spectrum_at_z(ax, filename, 3,  20, alpha, 'g')
+
+#    filename = 'output/fcr_test_1D_0_t_300_nz_1201_np_96.txt'
+#    read_spectrum_at_z(filename, 3,  5, alpha, 'b:')
+#    read_spectrum_at_z(filename, 3, 10, alpha, 'r:')
+#    read_spectrum_at_z(filename, 3, 20, alpha, 'g:')
+
+    ax.legend(['5 pc', '10 pc', '20 pc'], fontsize=22, loc='upper left', frameon=False)
+
+#    #filename = 'output/fcr_test_1D_0_t_0_nz_1201_np_96.txt'
+#    #read_spectrum_at_z(filename, 3, 10, alpha, 'k:')
+#
+#    x = 2e4
+#    y = 3.2e27 * (100. / 20.)**(1./3.)
+#    y_err_hi = 1.4e27 * (100. / 20.)**(1./3.)
+#    y_err_lo = 1.0e27 * (100. / 20.)**(1./3.)
+#
+#    plt.errorbar(x, x**alpha * y, yerr=y_err_lo, fmt='o', markersize='8', elinewidth=2, capsize=6, capthick=2, color='k')
+
+    #plt.plot([5e4, 5e4], [1e20, 1e40], 'c:')
+
+#    p = np.logspace(3,6,100)
+#
+#    c = 3e10 # cm / s
+#    rL = 3.1e18 * (p / 1e6)
+#
+#    plt.plot(p, rL * c / 3.0, 'k--')
+    
+    #plt.text(1e4, 2e27, 'H', fontsize=20)
+    
+    #ax.text(1e3, 2e30, 'Galactic Diffusion', fontsize=25, rotation=11)
+    #ax.text(1e4, 5e26, 'Bohm limit', fontsize=25, rotation=30)
+
+    ax.set_xscale('log')
+    #plt.xlim([1e1, 1e6])
+    ax.set_xlabel(r'p [GeV/c]',fontsize=35,labelpad=10)
+
+    ax.set_yscale('log')
+    #plt.ylim([1e26, 1e31])
+    ax.set_ylabel(r'D(p) [cm$^2$/s]',fontsize=35,labelpad=15)
+
+    plt.savefig('dzz_spectrum.pdf', format='pdf', dpi=300)
+
+def plot_dzz_profile():
+    fig = plt.figure(figsize=(10.5,8))
+    ax = fig.add_subplot(111)
+    
+    filename = 'output/fcr_test_3.5_kol_t_5_nz_1201_np_256.txt'
+    utils.read_profile_at_p(ax, filename, 3, 1e5, 'b', False)
+    utils.read_profile_at_p(ax, filename, 3, 1e3, 'g', False)
+    
+    ax.legend([r'$1e5$', r'$1e3$'])
+    #read_profile_at_p(filename, 3, 1e4, 'r', True)
+    #read_profile_at_p(filename, 3, 1e5, 'b', True)
+
+#    filename = 'output/fcr_test_1D_1_t_20_nz_1201_np_96.txt'
+#    read_profile_at_p(filename, 3, 1e4, 'b:', False)
+
+    ax.set_xlabel(r'z [pc]', fontsize=38)
+    #plt.xlim([0, 10])
+    ax.set_xscale('log')
+
+    ax.set_ylabel(r'D(z) [cm$^2$/s]', fontsize=38)
+    #plt.ylim([0.01,1.1])
+    ax.set_yscale('log')
+
+#    ax.legend([r'$E = 100$ TeV'], fontsize=25, loc='upper right', frameon=False)
+    plt.savefig('dzz_profile.pdf', format='pdf', dpi=300)
+
+def plot_dfdz_spectrum():
+    fig = plt.figure(figsize=(10.5,8))
+    ax = fig.add_subplot(111)
+    
+    filename = 'output/fcr_test_3.5_kol_t_5_nz_1201_np_256.txt'
+
+    alpha = 3.0
+    utils.read_spectrum_at_z(ax, filename, 4,   5, alpha, 'b')
+    utils.read_spectrum_at_z(ax, filename, 4,  10, alpha, 'r')
+    utils.read_spectrum_at_z(ax, filename, 4,  50, alpha, 'g')
+    utils.read_spectrum_at_z(ax, filename, 4, 100, alpha, 'm')
+
+    ax.legend(['5 pc', '10 pc', '50 pc', '100 pc'], fontsize=22, loc='best', frameon=False)
+
+#    read_spectrum_at_z(filename, 4, -1, alpha, 'g')
+#    read_spectrum_at_z(filename, 4, -2, alpha, 'c')
+#    read_spectrum_at_z(filename, 4, -5, alpha, 'b')
+#    read_spectrum_at_z(filename, 4,  0, alpha, 'y')
+#    read_spectrum_at_z(filename, 4,  1, alpha, 'g:')
+#    read_spectrum_at_z(filename, 4,  2, alpha, 'c:')
+#    read_spectrum_at_z(filename, 4,  5, alpha, 'b:')
+
+    plt.xscale('log')
+    #plt.xlim([0.1,1e7])
+    plt.xlabel(r'p [GeV/c]',fontsize=28)
+    
+    plt.yscale('log')
+    plt.ylim([1e-10,1e-2])
+    plt.ylabel(r'p3 df/dz [m$^{-3}$ kpc$^{-1}$]',fontsize=28)
+    plt.savefig('dfdz_spectrum.pdf', format='pdf', dpi=300)
+
+def plot_dfdz_profile():
+    fig = plt.figure(figsize=(10.5,8))
+    ax = fig.add_subplot(111)
+
+    filename = 'output/fcr_test_3.5_kol_t_5_nz_1201_np_256.txt'
+
+    utils.read_profile_at_p(ax, filename, 4, 1e4, 'r', False)
+    utils.read_profile_at_p(ax, filename, 4, 1e5, 'b', False)
+
+    #read_profile_at_p(filename, 4, 1e2, 'g', True)
+    #read_profile_at_p(filename, 4, 1e3, 'c', True)
+    #read_profile_at_p(filename, 4, 1e4, 'b', True)
+    #read_profile_at_p(filename, 4, 1e5, 'm', False)
+
+#    filename = 'output/fcr_test_3D_1_t_1_nz_401_np_20.txt'
+#    read_profile_at_p(filename, 4, 1e5, 'b', False)
+#
+#    filename = 'output/fcr_test_3D_1_t_2_nz_401_np_20.txt'
+#    read_profile_at_p(filename, 4, 1e5, 'r', False)
+    
+    ax.legend([r'$10^4$ GeV', '$10^5$ GeV'], fontsize=22, loc='best', frameon=False)
+
+    #plt.xscale('log')
+    plt.xlim([0, 25])
+    plt.xlabel(r'z [kpc]',fontsize=28)
+    
+    plt.yscale('log')
+    #plt.ylim([1e-5,1e1])
+    plt.ylabel(r'p$^3$ df/dz [m$^{-3}$ kpc$^{-1}$]',fontsize=28)
+
+    plt.savefig('dfdz_profile.pdf', format='pdf', dpi=300)
+
+def plot_waves_spectrum():
+    fig = plt.figure(figsize=(10.5,8))
+    ax = fig.add_subplot(111)
+    
+    filename = 'output/fcr_test_3.5_kol_t_5_nz_1201_np_256.txt'
+
+    alpha = 0.0
+    utils.read_spectrum_at_z(ax, filename, 6,   5, alpha, 'b')
+    utils.read_spectrum_at_z(ax, filename, 6,  10, alpha, 'r')
+    utils.read_spectrum_at_z(ax, filename, 6,  50, alpha, 'g')
+    utils.read_spectrum_at_z(ax, filename, 6, 100, alpha, 'm')
+
+    ax.legend(['5 pc', '10 pc', '50 pc', '100 pc'], fontsize=22, loc='best', frameon=False)
+
+#    read_spectrum_at_z(filename, 4, -1, alpha, 'g')
+#    read_spectrum_at_z(filename, 4, -2, alpha, 'c')
+#    read_spectrum_at_z(filename, 4, -5, alpha, 'b')
+#    read_spectrum_at_z(filename, 4,  0, alpha, 'y')
+#    read_spectrum_at_z(filename, 4,  1, alpha, 'g:')
+#    read_spectrum_at_z(filename, 4,  2, alpha, 'c:')
+#    read_spectrum_at_z(filename, 4,  5, alpha, 'b:')
+
+    plt.xscale('log')
+    #plt.xlim([0.1,1e7])
+    plt.xlabel(r'p [GeV/c]',fontsize=28)
+    
+    plt.yscale('log')
+    #plt.ylim([1e-10,1e-2])
+    plt.ylabel(r'W [m]',fontsize=28)
+    plt.savefig('waves_spectrum.pdf', format='pdf', dpi=300)
+
+def plot_waves_profile():
+    fig = plt.figure(figsize=(10.5,8))
+    ax = fig.add_subplot(111)
+
+    filename = 'output/fcr_test_3.5_kol_t_5_nz_1201_np_256.txt'
+
+    utils.read_profile_at_p(ax, filename, 6, 1e4, 'r', False)
+    utils.read_profile_at_p(ax, filename, 6, 1e5, 'b', False)
+
+    #read_profile_at_p(filename, 4, 1e2, 'g', True)
+    #read_profile_at_p(filename, 4, 1e3, 'c', True)
+    #read_profile_at_p(filename, 4, 1e4, 'b', True)
+    #read_profile_at_p(filename, 4, 1e5, 'm', False)
+
+#    filename = 'output/fcr_test_3D_1_t_1_nz_401_np_20.txt'
+#    read_profile_at_p(filename, 4, 1e5, 'b', False)
+#
+#    filename = 'output/fcr_test_3D_1_t_2_nz_401_np_20.txt'
+#    read_profile_at_p(filename, 4, 1e5, 'r', False)
+    
+    ax.legend([r'$10^4$ GeV', '$10^5$ GeV'], fontsize=22, loc='best', frameon=False)
+
+    #plt.xscale('log')
+    plt.xlim([0, 25])
+    plt.xlabel(r'z [kpc]',fontsize=28)
+    
+    plt.yscale('log')
+    #plt.ylim([1e-5,1e1])
+    plt.ylabel(r'W [m]',fontsize=28)
+
+    plt.savefig('waves_profile.pdf', format='pdf', dpi=300)
+
+
+
+    
+
+
+
+
+
+    
+    
 def plot_Jcr_spectrum():
     alpha = 2
     #plot_data('data/H_BESS-PolarII.txt', alpha, 'c', 'BESS-PolarII', 1)
@@ -214,84 +308,11 @@ def plot_Jcr_spectrum():
 
     return 'electron_spectrum.pdf'
 
-def plot_fcr_spectrum():
-    alpha = 3
-    p = np.logspace(-2, 6, 100)
-    
-    filename = 'output/fcr_test_3D_0_t_1_nz_401_np_20.txt'
-    read_spectrum_at_z(filename, 2,    5, alpha, 'y')
-    read_spectrum_at_z(filename, 2,   10, alpha, 'g')
-    read_spectrum_at_z(filename, 2,   50, alpha, 'r')
 
-    filename = 'output/fcr_test_3D_0_t_30_nz_401_np_20.txt'
-    read_spectrum_at_z(filename, 2,    5, alpha, 'y:')
-    read_spectrum_at_z(filename, 2,   10, alpha, 'g:')
-    read_spectrum_at_z(filename, 2,   50, alpha, 'r:')
 
-    plt.xscale('log')
-    #plt.xlim([1e2, 1e5])
-    plt.xlabel(r'p [GeV/c]',fontsize=30)
-    
-    plt.yscale('log')
-    plt.ylim([1e-15, 1e-5])
-    plt.ylabel(r'p$^3$ f(p) []',fontsize=30)
 
-    p = np.logspace(2, 5, 100)
-    #plt.plot(p, 0.5e-11 * (p / 1e4)**(-3.5), 'k:')
-    #plt.plot(p, 1.0e-7 * (p / 1e2)**(-1.5), 'k:')
-    return 'fcr_spectrum.pdf'
 
-def plot_fcr_profile():
-    
-    filename = 'output/fcr_test_3D_0_t_1_nz_401_np_20.txt'
-    read_profile_at_p(filename, 2, 1e5, 'r', True)
-    read_profile_at_p(filename, 2, 1e2, 'm', True)
 
-    filename = 'output/fcr_test_3D_0_t_30_nz_401_np_20.txt'
-    read_profile_at_p(filename, 2, 1e5, 'r:', True)
-    read_profile_at_p(filename, 2, 1e2, 'm:', True)
-    
-#    filename = 'output/fcr_test_1D_1_t_4_nz_1001_np_20.txt'
-#    read_profile_at_p(filename, 2, 1e5, 'r:', True)
-#    read_profile_at_p(filename, 2, 1e3, 'b:', True)
-    
-    #plt.xscale('log')
-    plt.xlim([0, 10])
-    plt.xlabel(r'z [pc]', fontsize=28)
-    
-    #plt.yscale('log')
-    #plt.ylim([0.8, 1])
-    plt.ylabel(r'f(z) [au]', fontsize=28)
-    
-    #z = np.logspace(-1, 3, 100)
-    #plt.plot(z, np.exp(-0.5 * (z / 25.)**2), 'k--')
-
-#plt.legend(['10 GeV', '100 GeV', '1 TeV', '10 TeV'], fontsize=25, loc='upper right', frameon=False)
-
-    return 'fcr_profile.pdf'
-
-def plot_dzz_profile():
-
-    filename = 'output/fcr_test_1D_0_t_20_nz_1201_np_96.txt'
-    read_profile_at_p(filename, 3, 1e4, 'y', False)
-    #read_profile_at_p(filename, 3, 1e3, 'g', True)
-    #read_profile_at_p(filename, 3, 1e4, 'r', True)
-    #read_profile_at_p(filename, 3, 1e5, 'b', True)
-
-    filename = 'output/fcr_test_1D_1_t_20_nz_1201_np_96.txt'
-    read_profile_at_p(filename, 3, 1e4, 'b:', False)
-
-    plt.xlabel(r'z [pc]', fontsize=38)
-    #plt.xlim([0, 10])
-    #plt.xscale('log')
-
-    plt.ylabel(r'D(z) [$10^{28}$ cm$^2$/s]', fontsize=38)
-    #plt.ylim([0.01,1.1])
-    plt.yscale('log')
-
-    plt.legend([r'$E = 100$ TeV'], fontsize=25, loc='upper right', frameon=False)
-
-    return 'dzz_profile.pdf'
 
 def plot_dzz_withtime():
     t = []
@@ -321,54 +342,7 @@ def plot_dzz_withtime():
 
     return 'dzz_with_time.pdf'
 
-def plot_dzz_spectrum():
-    alpha = 0 # -1. / 3.
 
-    filename = 'output/fcr_test_1D_0_t_300_nz_1201_np_96.txt'
-    read_spectrum_at_z(filename, 3,   5, alpha, 'b')
-    read_spectrum_at_z(filename, 3,  10, alpha, 'r')
-    read_spectrum_at_z(filename, 3,  20, alpha, 'g')
-
-    filename = 'output/fcr_test_1D_0_t_300_nz_1201_np_96.txt'
-    read_spectrum_at_z(filename, 3,  5, alpha, 'b:')
-    read_spectrum_at_z(filename, 3, 10, alpha, 'r:')
-    read_spectrum_at_z(filename, 3, 20, alpha, 'g:')
-
-    #plt.legend(['10 pc', '20 pc', '50 pc'], fontsize=22, loc='upper left', frameon=False)
-
-    filename = 'output/fcr_test_1D_0_t_0_nz_1201_np_96.txt'
-    read_spectrum_at_z(filename, 3, 10, alpha, 'k:')
-    
-    x = 2e4
-    y = 3.2e27 * (100. / 20.)**(1./3.)
-    y_err_hi = 1.4e27 * (100. / 20.)**(1./3.)
-    y_err_lo = 1.0e27 * (100. / 20.)**(1./3.)
-
-    plt.errorbar(x, x**alpha * y, yerr=y_err_lo, fmt='o', markersize='8', elinewidth=2, capsize=6, capthick=2, color='k')
-
-    #plt.plot([5e4, 5e4], [1e20, 1e40], 'c:')
-
-    p = np.logspace(3,6,100)
-    
-    c = 3e10 # cm / s
-    rL = 3.1e18 * (p / 1e6)
-    
-    plt.plot(p, rL * c / 3.0, 'k--')
-    
-    #plt.text(1e4, 2e27, 'H', fontsize=20)
-    
-    plt.text(1e3, 2e30, 'Galactic Diffusion', fontsize=25, rotation=11)
-    plt.text(1e4, 5e26, 'Bohm limit', fontsize=25, rotation=30)
-
-    plt.xscale('log')
-    #plt.xlim([1e1, 1e6])
-    plt.xlabel(r'p [GeV/c]',fontsize=35,labelpad=10)
-
-    plt.yscale('log')
-    #plt.ylim([1e26, 1e31])
-    plt.ylabel(r'D(p) [cm$^2$/s]',fontsize=35,labelpad=15)
-
-    return 'dzz_spectrum.pdf'
 
 def plot_dzz_timescale():
     alpha = 0
@@ -398,50 +372,9 @@ def plot_dzz_timescale():
     plt.ylim([1e-2,1e5])
     plt.ylabel(r't$_{zz}$(p) [Myr]',fontsize=28)
 
-def plot_dfdz_spectrum():
-    alpha = 3.0
 
-    filename = 'output/fcr_test_1D_1_t_1_nz_1001_np_20.txt'
-    read_spectrum_at_z(filename, 4, -1, alpha, 'g')
-    read_spectrum_at_z(filename, 4, -2, alpha, 'c')
-    read_spectrum_at_z(filename, 4, -5, alpha, 'b')
 
-    read_spectrum_at_z(filename, 4,  0, alpha, 'y')
-    
-    read_spectrum_at_z(filename, 4,  1, alpha, 'g:')
-    read_spectrum_at_z(filename, 4,  2, alpha, 'c:')
-    read_spectrum_at_z(filename, 4,  5, alpha, 'b:')
 
-    plt.xscale('log')
-    #plt.xlim([0.1,1e7])
-    plt.xlabel(r'p [GeV/c]',fontsize=28)
-    
-    plt.yscale('log')
-    #plt.ylim([1e-20,1e0])
-    plt.ylabel(r'p3 df/dz []',fontsize=28)
-
-def plot_dfdz_profile():
-    filename = 'output/fcr_test_3D_1_t_0.1_nz_401_np_20.txt'
-    ##    read_profile_at_p(filename, 4, 1e2, 'g', True)
-    #read_profile_at_p(filename, 4, 1e3, 'c', True)
-    #read_profile_at_p(filename, 4, 1e4, 'b', True)
-    read_profile_at_p(filename, 4, 1e5, 'm', False)
-
-    filename = 'output/fcr_test_3D_1_t_1_nz_401_np_20.txt'
-    read_profile_at_p(filename, 4, 1e5, 'b', False)
-
-    filename = 'output/fcr_test_3D_1_t_2_nz_401_np_20.txt'
-    read_profile_at_p(filename, 4, 1e5, 'r', False)
-    
-    #plt.xscale('log')
-    plt.xlim([0, 50])
-    plt.xlabel(r'z [kpc]',fontsize=28)
-    
-    plt.yscale('log')
-    #plt.ylim([1e-5,1e1])
-    plt.ylabel(r'p$^3$ df/dz []',fontsize=28)
-
-    return 'dfdz_profile.pdf'
 
 def plot_flux_profile():
     filename = 'output/fcr_test_1D_0_t_10_nz_1001_np_20.txt'
@@ -453,16 +386,7 @@ def plot_flux_profile():
     plt.xlim([90, 100])
     plt.yscale('log')
 
-def plot_wave_profile():
-    filename = 'output/fcr_test_1D_1_t_10_nz_101_np_20.txt'
-    read_profile_at_p(filename, 6, 1e2, 'y', True)
-    read_profile_at_p(filename, 6, 1e3, 'g', True)
-    read_profile_at_p(filename, 6, 1e4, 'r', True)
-    read_profile_at_p(filename, 6, 1e5, 'b', True)
 
-    plt.xlim([-10, 10])
-    return 'wave_profile.pdf'
-i
 def plot_Gamma_spectrum():
     alpha = 0
     read_spectrum_at_z('output/wab_test_7_t_0_nz_1281_nk_576.txt', 8, 0.0, alpha, 'y')
@@ -638,7 +562,7 @@ def plot_energy_density():
     e = []
     for r_ in r:
         e_ = read_energy_density_at_z(filename, 2, r_)
-        print r_, e_
+        print (r_, e_)
         e.append(e_)
 
     plt.xlabel(r'z [pc]', fontsize=28)
@@ -649,26 +573,27 @@ def plot_energy_density():
     
     plt.plot(r, e)
 
-print 'Plotting starts here...'
+print ('Plotting starts here...')
 
-def plotit():
-    
-    #plt.figure(1)
-    #plotname = plot_wave_spectrum()
-    #plotname = plot_wave_profile()
+if __name__== "__main__":
+    plot_fcr_spectrum()
+    plot_fcr_profile()
+    plot_dzz_spectrum()
+    plot_dzz_profile()
+    plot_dfdz_spectrum()
+    plot_dfdz_profile()
+    plot_waves_spectrum()
+    plot_waves_profile()
+
+    #plot_energy_density()
     #plotname = plot_cascade_timescale()
-    plotname = plot_dzz_spectrum()
-    #plotname = plot_dzz_profile()
     #plotname = plot_dzz_withtime()
     #plotname = plot_wave_profile()
     #plot_dzz_integral()
     #plot_dzz_timescale()
     #plot_giovanni()
     #plotname = plot_Jcr_spectrum()
-    #plotname = plot_fcr_spectrum()
-    #plotname = plot_fcr_profile()
-    #plotname = plot_dfdz_spectrum()
-    #plotname = plot_dfdz_profile()
+
     #plotname = plot_flux_profile()
     #plot_Gamma_spectrum()
     #plotname = plot_source_spectrum()
@@ -677,9 +602,4 @@ def plotit():
     #plotname = plot_positrons()
     #plotname = plot_electrons()
     #plotname = plot_analytical_solution()
-    #plotname = plot_energy_density()
 
-    #plt.show()
-    plt.savefig(plotname, format='pdf', dpi=300)
-
-plotit()
