@@ -7,12 +7,12 @@
 int main() {
 
 	Params par;
-	par.init_filename.set("new_geminga_7");
+	par.init_filename.set("test_3.5_kol");
 	par.do_selfgeneration.set(true);
-	par.alpha.set(3.2);
+	par.alpha.set(3.5);
 	par.magnetic_field.set(2. * microgauss);
-	par.do_kolmogorov.set(false);
-	//par.do_3D.set(true);
+	par.do_kolmogorov.set(true);
+	par.do_3D.set(false);
 
 	Waves * W = new Waves(par);
 
