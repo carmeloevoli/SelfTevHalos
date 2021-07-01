@@ -1,28 +1,31 @@
 project(CRWAVES CXX)
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.1)
 
 set( CMAKE_VERBOSE_MAKEFILE off )
 set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 set( CMAKE_CXX_COMPILER "/usr/local/bin/g++-10" )
-set( CMAKE_CXX_FLAGS "-O3 -fopenmp" )
+set( CMAKE_CXX_FLAGS "-O3 -ftree-vectorize -std=c++11 -fopenmp -DTHREADS=16" )
 set( CRWAVES_EXTRA_INCLUDES )
 set( CRWAVES_EXTRA_LIBRARIES )
 
 include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( CRWAVES_SRCS 
-     diffusion.cpp
-     dump.cpp
-     energy_losses.cpp
-     evolutors.cpp
-     evolve.cpp
-     main.cpp
-     params.cpp
-     sources.cpp
-     tridiag.cpp
-     utilities.cpp
-     waves.cpp
+     src/diffusion.cpp
+     src/dump.cpp
+     src/energy_losses.cpp
+     src/evolutors.cpp
+     src/evolve.cpp
+     src/main.cpp
+     src/params.cpp
+     src/sources.cpp
+     src/tridiag.cpp
+     src/utilities.cpp
+     src/waves.cpp
 )
+
+# create the output dir
+file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output)
 
 # GSL (external)
 find_package(GSL)
@@ -46,3 +49,5 @@ message (STATUS "BUILD_SHARED_LIBS ..... = ${BUILD_SHARED_LIBS}")
 message (STATUS "CMAKE_CXX_COMPILER .... = ${CMAKE_CXX_COMPILER}")
 message (STATUS "CMAKE_CXX_FLAGS ....... = ${CMAKE_CXX_FLAGS}")
 message (STATUS "CMAKE_INCLUDE_PATH .... = ${CMAKE_INCLUDE_PATH}")
+message (STATUS "CRWAVES_INCLUDES ........ = ${CRWAVES_EXTRA_INCLUDES}")
+message (STATUS "CRWAVES_LIBRARIES ....... = ${CRWAVES_EXTRA_LIBRARIES}")

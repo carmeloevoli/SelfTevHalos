@@ -1,11 +1,5 @@
-# Plots
-plots/*.pdf
-plots/*.png
-plots/*.txt
-plots/*~
-plots/*.pyc
-plots/output
-*.DS_Store
-plots/__pycache__/
-
 build/
+*.DS_Store
+*.vscode
+*.code-workspace
+*plots
