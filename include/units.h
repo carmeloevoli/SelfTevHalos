@@ -1,13 +1,16 @@
+// Copyright (c) 2018 carmeloevoli distributed under the MIT License
 #ifndef UNITS_H_
 #define UNITS_H_
 
 #include <cmath>
 
+namespace mks {
+
 // powers
-#define pow2(A) ((A)*(A))
-#define pow3(A) ((A)*(A)*(A))
-#define pow4(A) ((A)*(A)*(A)*(A))
-#define pow5(A) ((A)*(A)*(A)*(A)*(A))
+#define pow2(A) ((A) * (A))
+#define pow3(A) ((A) * (A) * (A))
+#define pow4(A) ((A) * (A) * (A) * (A))
+#define pow5(A) ((A) * (A) * (A) * (A) * (A))
 
 // MKS units
 static const double meter = 1;
@@ -99,5 +102,7 @@ static const double GeV_c = GeV / c_light;
 static const double TeV_c = TeV / c_light;
 static const double PeV_c = PeV / c_light;
 static const double EeV_c = EeV / c_light;
+
+}  // namespace mks
 
 #endif
