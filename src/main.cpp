@@ -10,7 +10,7 @@ int main() {
   par.init_filename.set("test_3.5_kol");
   par.do_selfgeneration.set(true);
   par.alpha.set(3.5);
-  par.magnetic_field.set(2. * mks::microgauss);
+  par.magnetic_field.set(1. * mks::microgauss);
   par.do_kolmogorov.set(true);
   par.do_3D.set(false);
 
@@ -18,8 +18,8 @@ int main() {
 
   std::cout << " ... init \n";
 
-  W->build_z_axis(100 * mks::pc, 1201);
-  W->build_p_axis(1e2 * mks::GeV_c, 1e6 * mks::GeV_c, 64 * 4);
+  W->build_z_axis(100 * mks::pc, 601);
+  W->build_p_axis(1e2 * mks::GeV_c, mks::PeV_c, 32 * 4);
   W->build_CR_source_term();
   W->build_W_ISM();
   W->build_W_sg();
@@ -34,7 +34,11 @@ int main() {
 
   std::cout << " ... evolve\n";
 
-  W->evolve(0.1 * mks::year, 300 * 1000 * 10, 1000 * 10);
+  double time_step = 0.1 * mks::year;
+  double max_counter = 10 * 1000 * 300;  // 300 kyr
+  double dump_counter = 10 * 1000;       // 1 kyr;
+
+  W->evolve(time_step, max_counter, dump_counter);
 
   std::cout << " ... done! \n";
 
