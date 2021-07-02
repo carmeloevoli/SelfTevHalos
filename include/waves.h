@@ -48,7 +48,6 @@ class Waves {
   std::string generate_output_filename(const std::string& s, const double& t);
   void dump(const double& t);
   void dump_analytical_test(const double& t);
-  void dump_rates(const double& t);
 
   // diffusion.cpp
   void compute_D_zz();
