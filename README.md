@@ -5,7 +5,9 @@
 
 ## About
 
-Code to compute self-consistently the self-generation of Alfven waves by pairs leaving pulsars. The code solves the time-dependent propagation and diffusion of cosmic rays from a time-dependent source in a regime with both time- and distance-dependent diffusion. We applied this code to show that pulsars can produce localized regions where diffusion is inhibited by 2–3 orders of magnitude, consistent with TeV halo observations. Read more: https://arxiv.org/abs/1807.09263
+Code to compute self-consistently the self-generation of Alfven waves by pairs leaving pulsars. The code solves the time-dependent propagation and diffusion of cosmic rays from a time-dependent source in a regime with both time- and distance-dependent diffusion. We applied this code to show that pulsars can produce localized regions where diffusion is inhibited by 2–3 orders of magnitude, consistent with TeV halo observations. 
+
+Read more: [1807.09263](https://arxiv.org/abs/1807.09263)
 
 ## Install
 
