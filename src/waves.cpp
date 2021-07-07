@@ -11,7 +11,7 @@ Waves::Waves(const Params& params) : par(params) {
   magnetic_energy_density = pow2(par.magnetic_field) / 2. / mks::vacuum_permeability;
   vA_infty = par.magnetic_field / std::sqrt(mks::vacuum_permeability * mks::proton_mass * par.ion_number_density);
   k0 = 1. / par.correlation_length;
-  factor_damping = pow(2. * par.ck, -1.5) * vA_infty;
+  factor_damping = par.ck * vA_infty;
   factor_growth = 2. * M_PI / 3. * mks::c_light * vA_infty / magnetic_energy_density;
 }
 
