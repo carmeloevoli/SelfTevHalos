@@ -8,7 +8,7 @@ namespace CRWAVES {
 
 void Waves::compute_D_zz() {
   for (size_t ip = 0; ip < p_size; ++ip) {
-    double k = 1. / larmor_radius(p.at(ip), par.magnetic_field.get());
+    double k = 1. / larmor_radius(p.at(ip), par.magnetic_field);
     double factor = beta(p.at(ip)) * mks::c_light / 3.0 / pow2(k);
     for (size_t iz = 1; iz < z_size - 1; ++iz) {
       double value = factor / W_sg.get(ip, iz);
@@ -20,7 +20,7 @@ void Waves::compute_D_zz() {
 }
 
 void Waves::compute_dfdz() {
-  if (par.do_3D.get())
+  if (par.do_3D)
     compute_dfdz_3D();
   else
     compute_dfdz_1D();

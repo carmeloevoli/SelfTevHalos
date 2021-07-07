@@ -5,19 +5,17 @@
 
 namespace CRWAVES {
 
-Waves::Waves(const Params& par_) {
-  par = par_;
+Waves::Waves(const Params& params) : par(params) {
   par.print();
 
-  magnetic_energy_density = pow2(par.magnetic_field.get()) / 2. / mks::vacuum_permeability;
-  vA_infty =
-      par.magnetic_field.get() / std::sqrt(mks::vacuum_permeability * mks::proton_mass * par.ion_number_density.get());
-  k0 = 1. / par.correlation_length.get();
-  factor_damping = pow(2. * par.ck.get(), -1.5) * vA_infty;
+  magnetic_energy_density = pow2(par.magnetic_field) / 2. / mks::vacuum_permeability;
+  vA_infty = par.magnetic_field / std::sqrt(mks::vacuum_permeability * mks::proton_mass * par.ion_number_density);
+  k0 = 1. / par.correlation_length;
+  factor_damping = pow(2. * par.ck, -1.5) * vA_infty;
   factor_growth = 2. * M_PI / 3. * mks::c_light * vA_infty / magnetic_energy_density;
 }
 
-Waves::~Waves() {}
+Waves::~Waves() { std::cout << "calling main destructor\n"; }
 
 void Waves::build_p_axis(const double& p_min, const double& p_max, const size_t& p_size) {
   p.build_log_axis(p_min, p_max, p_size);
@@ -28,7 +26,7 @@ void Waves::build_p_axis(const double& p_min, const double& p_max, const size_t&
 }
 
 void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
-  if (par.do_3D.get())
+  if (par.do_3D)
     z.build_lin_axis(0, halo_size, z_size);
   else
     z.build_lin_axis(-halo_size, halo_size, z_size);
@@ -40,13 +38,13 @@ void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
 
 void Waves::build_W_ISM() {
   W_ISM.set_grid_size(p.get_size(), z.get_size());
-  double k_norm = 1. / larmor_radius(par.D_gal_ref.get(), par.magnetic_field.get());
-  double eta_B = mks::c_light / 2. / k_norm / par.D_gal.get() * pow(k_norm / k0, 2. / 3.);
+  double k_norm = 1. / larmor_radius(par.D_gal_ref, par.magnetic_field);
+  double eta_B = mks::c_light / 2. / k_norm / par.D_gal * pow(k_norm / k0, 2. / 3.);
   std::cout << " - eta_B = " << eta_B << "\n";
   for (size_t ip = 0; ip < p.get_size(); ++ip) {
     for (size_t iz = 0; iz < z.get_size(); ++iz) {
       double value = 2.0 * eta_B / 3.0 / k0;
-      double k = 1. / larmor_radius(p.at(ip), par.magnetic_field.get());
+      double k = 1. / larmor_radius(p.at(ip), par.magnetic_field);
       if (k > k0) value *= pow(k / k0, -5. / 3.);
       W_ISM.get(ip, iz) = value;
     }

@@ -25,7 +25,7 @@ namespace CRWAVES {
 
 class Waves {
  public:
-  Waves(const Params& par_);
+  Waves(const Params& params);
   virtual ~Waves();
 
   // waves.cpp
@@ -81,12 +81,12 @@ class Waves {
 
  private:
   Params par;
-  double dt = double();
-  double dt_half = double();
-  double dz = double();
-  double dlnp = double();
-  size_t z_size = size_t();
-  size_t p_size = size_t();
+  double dt = 0;
+  double dt_half = 0;
+  double dz = 0;
+  double dlnp = 0;
+  size_t z_size = 0;
+  size_t p_size = 0;
 
   double magnetic_energy_density = 0;
   double vA_infty = 0;

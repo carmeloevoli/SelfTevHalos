@@ -5,7 +5,7 @@ namespace CRWAVES {
 
 std::string Waves::generate_output_filename(const std::string& s, const double& t) {
   std::stringstream sstream;
-  sstream << "output/" << s << "_" << par.init_filename.get();
+  sstream << "output/" << s << "_" << par.init_filename;
   sstream << "_t_" << t / mks::kyr << "_nz_" << z.get_size() << "_np_" << p.get_size() << ".txt";
   std::string out = sstream.str();
   return out;

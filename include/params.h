@@ -12,17 +12,17 @@
 
 namespace CRWAVES {
 
-template <typename T>
-class Param {
- public:
-  Param() {}
-  virtual ~Param() {}
-  T get() const { return value; }
-  void set(const T &value) { this->value = value; }
+// template <typename T>
+// class Param {
+//  public:
+//   Param() {}
+//   virtual ~Param() {}
+//   T get() const { return value; }
+//   void set(const T &value) { this->value = value; }
 
- protected:
-  T value = T();
-};
+//  protected:
+//   T value = T();
+// };
 
 class Params {
  public:
@@ -31,24 +31,51 @@ class Params {
   void print();
   std::string generate_output_filename();
 
-  Param<double> correlation_length;
-  Param<double> D_gal;
-  Param<double> D_gal_ref;
-  Param<double> magnetic_field;
-  Param<double> ck;
-  Param<double> alpha;
-  Param<double> ion_number_density;
-  Param<double> source_pmin;
-  Param<double> source_cutoff;
-  Param<double> source_size;
-  Param<double> source_tdecay;
-  Param<double> spin_down_luminosity;
-  Param<double> age;
-  Param<double> tube_radius;
-  Param<bool> do_selfgeneration;
-  Param<bool> do_3D;
-  Param<bool> do_kolmogorov;
-  Param<std::string> init_filename;
+  void set_init_filename(std::string init_filename) { m_init_filename = init_filename; }
+  void set_do_selfgeneration(bool do_selfgeneration) { m_do_selfgeneration = do_selfgeneration; }
+  void set_alpha(double alpha) { m_alpha = alpha; };
+  void set_magnetic_field(double magnetic_field) { m_magnetic_field = magnetic_field; };
+  void set_do_kolmogorov(bool do_kolmogorov) { m_do_kolmogorov = do_kolmogorov; };
+  void set_do_3D(bool do_3D) { m_do_3D = do_3D; };
+
+  const double& correlation_length = m_correlation_length;
+  const double& D_gal = m_D_gal;
+  const double& D_gal_ref = m_D_gal_ref;
+  const double& magnetic_field = m_magnetic_field;
+  const double& ck = m_ck;
+  const double& alpha = m_alpha;
+  const double& ion_number_density = m_ion_number_density;
+  const double& source_pmin = m_source_pmin;
+  const double& source_cutoff = m_source_cutoff;
+  const double& source_size = m_source_size;
+  const double& source_tdecay = m_source_tdecay;
+  const double& spin_down_luminosity = m_spin_down_luminosity;
+  const double& age = m_age;
+  const double& tube_radius = m_tube_radius;
+  const bool& do_selfgeneration = m_do_selfgeneration;
+  const bool& do_3D = m_do_3D;
+  const bool& do_kolmogorov = m_do_kolmogorov;
+  const std::string& init_filename = m_init_filename;
+
+ private:
+  double m_correlation_length;
+  double m_D_gal;
+  double m_D_gal_ref;
+  double m_magnetic_field;
+  double m_ck;
+  double m_alpha;
+  double m_ion_number_density;
+  double m_source_pmin;
+  double m_source_cutoff;
+  double m_source_size;
+  double m_source_tdecay;
+  double m_spin_down_luminosity;
+  double m_age;
+  double m_tube_radius;
+  bool m_do_selfgeneration;
+  bool m_do_3D;
+  bool m_do_kolmogorov;
+  std::string m_init_filename;
 };
 
 }  // namespace CRWAVES

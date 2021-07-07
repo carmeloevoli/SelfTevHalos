@@ -39,12 +39,12 @@ double Waves::compute_total_energy_in_fcr() {
     for (size_t ip = 0; ip < p.get_size() - 1; ++ip) {
       I_p += pow3(p.at(ip)) * f_cr.get(ip, iz) * (p.at(ip) * mks::c_light);
     }
-    if (par.do_3D.get())
+    if (par.do_3D)
       value += pow2(z.at(iz)) * I_p;
     else
       value += I_p;
   }
-  if (par.do_3D.get())
+  if (par.do_3D)
     value *= pow2(4. * M_PI) * dz * dlnp;
   else
     value *= 4.0 * pow2(M_PI) * pow2(R) * dz * dlnp;
@@ -60,12 +60,12 @@ double Waves::compute_source_luminosity() {
     for (size_t ip = 0; ip < p.get_size() - 1; ++ip) {
       I_p += pow3(p.at(ip)) * Q_cr.get(ip, iz) * (p.at(ip) * mks::c_light);
     }
-    if (par.do_3D.get())
+    if (par.do_3D)
       value += pow2(z.at(iz)) * I_p;
     else
       value += I_p;
   }
-  if (par.do_3D.get())
+  if (par.do_3D)
     value *= pow2(4. * M_PI) * dz * dlnp;
   else
     value *= 4.0 * pow2(M_PI) * pow2(R) * dz * dlnp;
@@ -76,7 +76,7 @@ double Waves::compute_source_luminosity() {
 void Waves::test_total_energy(const size_t& counter, const double& dt) {
   std::cout << " -- source term: " << compute_source_luminosity() / (mks::erg / mks::s) << "\n";
   double t = (double)counter * dt;
-  double t0 = par.source_tdecay.get();
+  double t0 = par.source_tdecay;
   double injected = compute_source_luminosity() * (t * t0 / (t + t0));
   double in_crs = compute_total_energy_in_fcr();
   std::cout << " -- injected: " << injected / mks::erg << "\n";
@@ -114,7 +114,7 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
     evolve_f_in_z(2, counter * dt);
     evolve_f_in_p(2, counter * dt);
     compute_dfdz();
-    if ((double)counter * dt > 0.1 * mks::kyr && par.do_selfgeneration.get()) {
+    if ((double)counter * dt > 0.1 * mks::kyr && par.do_selfgeneration) {
       // evolve_waves_in_z(1);
       evolve_waves(1);
       compute_D_zz();

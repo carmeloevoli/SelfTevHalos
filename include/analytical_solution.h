@@ -35,11 +35,11 @@ class AnalyticSolution {
   void set_alpha(const double &alpha) { this->alpha = alpha; }
   void set_p_cutoff(const double &p_cutoff) { this->p_cutoff = p_cutoff; }
   void set_params(const Params &params, const double &Q0) {
-    set_D0(params.D_gal.get());
-    set_D0_ref(params.D_gal_ref.get());
+    set_D0(params.D_gal);
+    set_D0_ref(params.D_gal_ref);
     set_delta(1. / 3.);
-    set_alpha(params.alpha.get());
-    set_p_cutoff(params.source_cutoff.get());
+    set_alpha(params.alpha);
+    set_p_cutoff(params.source_cutoff);
     set_Q0(Q0);
   }
 
@@ -51,8 +51,8 @@ class AnalyticSolution {
   double alpha = 3.5;
   double p_cutoff = 100 * mks::TeV_c;
 
-  double Q(const double &p) { return Q0 * pow(p / mks::electron_mass_c, -alpha) * std::exp(-pow2(p / p_cutoff)); }
-  double D(const double &p) { return D0 * pow(p / D0_ref, delta); }
+  double Q(const double &p) { return Q0 * std::pow(p / mks::electron_mass_c, -alpha) * std::exp(-pow2(p / p_cutoff)); }
+  double D(const double &p) { return D0 * std::pow(p / D0_ref, delta); }
 };
 
 }  // namespace CRWAVES
