@@ -54,12 +54,6 @@ static const double teraelectronvolt = 1e12 * electronvolt;
 static const double petaelectronvolt = 1e15 * electronvolt;
 static const double exaelectronvolt = 1e18 * electronvolt;
 static const double eV = electronvolt;
-static const double keV = kiloelectronvolt;
-static const double MeV = megaelectronvolt;
-static const double GeV = gigaelectronvolt;
-static const double TeV = teraelectronvolt;
-static const double PeV = petaelectronvolt;
-static const double EeV = exaelectronvolt;
 
 // time
 static const double year = 3.15569e7 * second;
@@ -96,12 +90,12 @@ static const double vacuum_permeability = 4e-7 * M_PI * tesla * meter / ampere;
 static const double electron_radius = 2.8179403227e-15 * meter;
 
 // derived units with physical constants
-static const double keV_c = keV / c_light;
-static const double MeV_c = MeV / c_light;
-static const double GeV_c = GeV / c_light;
-static const double TeV_c = TeV / c_light;
-static const double PeV_c = PeV / c_light;
-static const double EeV_c = EeV / c_light;
+static const double keV_c = kiloelectronvolt / c_light;
+static const double MeV_c = megaelectronvolt / c_light;
+static const double GeV_c = gigaelectronvolt / c_light;
+static const double TeV_c = teraelectronvolt / c_light;
+static const double PeV_c = petaelectronvolt / c_light;
+static const double EeV_c = exaelectronvolt / c_light;
 
 }  // namespace mks
 
