@@ -81,21 +81,11 @@ class TAxis {
 
   size_t get_idx(T value) {
     if (value < 0.999 * min || value > max * 1.001) {
-      std::cerr << "Error: Value " << value << " cannot be set in the range : " << min << " ... " << max << "\n";
+      std::cerr << "Error! Value " << value << " outside the range : " << min << " ... " << max << "\n";
       exit(-1);
     } else {
       return find_nearest(axis, value);
     }
-  }
-
-  size_t get_lower_idx(T value) {
-    if (value < min || value > max) {
-      std::cerr << "Value not in the range " << __FILE__ << __LINE__ << "\n";
-      exit(-1);
-    }
-    size_t out = 0;
-    while (axis.at(out) <= value) out++;
-    return out - 1;
   }
 
   T get_reference_value() const { return reference_value; }
