@@ -146,3 +146,61 @@ void Waves::evolve_f_in_z_explicit(const size_t& number_of_operators, const doub
     }
   }
 }
+
+void Waves::evolve_waves_in_z(const size_t& number_of_operators) {
+  double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
+
+#pragma omp parallel for
+  for (size_t ip = 0; ip < p_size - 1; ++ip) {
+    std::vector<double> rhs(z_size - 2);
+    std::vector<double> central_diagonal(z_size - 2);
+    std::vector<double> upper_diagonal(z_size - 3);
+    std::vector<double> lower_diagonal(z_size - 3);
+    std::vector<double> W_up(z_size - 2);
+
+    double k_ = 1. / larmor_radius(p.at(ip), par.magnetic_field);
+
+    for (size_t iz = 1; iz < z_size - 1; ++iz) {
+      double L, C, U;
+      if (iz > z.get_idx()) {
+        L = vA_abs_dz;
+        C = vA_abs_dz;
+        U = 0;
+      } else if (iz < z.get_idx()) {
+        L = 0;
+        C = vA_abs_dz;
+        U = vA_abs_dz;
+      } else {
+        L = -vA_abs_dz / 2.;
+        C = 0;
+        U = -vA_abs_dz / 2.;
+      }
+
+      central_diagonal.at(iz - 1) = 1. + dt_half * C;
+      if (iz != 1) {
+        lower_diagonal.at(iz - 2) = -dt_half * L;
+      }
+      if (iz != z_size - 2) {
+        upper_diagonal.at(iz - 1) = -dt_half * U;
+      }
+
+      rhs.at(iz - 1) = W_sg.get(ip, iz) * (1. - dt_half * C);
+      rhs.at(iz - 1) += (iz != 0) ? dt_half * L * W_sg.get(ip, iz - 1) : 0.;
+      rhs.at(iz - 1) += (iz != z_size - 2) ? dt_half * U * W_sg.get(ip, iz + 1) : 0;
+
+      auto W = W_sg.get(ip, iz);
+      auto Gamma_D = factor_damping * (par.do_kolmogorov) ? std::pow(k_, 1.5) * std::sqrt(W) : std::pow(k_, 2.) * W;
+      auto Gamma_D_gal = factor_damping * std::pow(k_, 1.5) * std::sqrt(W_ISM.get(ip, iz));
+      double WGamma_CR = factor_growth / k_ * pow4(p.at(ip)) * df_dz.get(ip, iz);
+      double Q_w = WGamma_CR - Gamma_D * W_sg.get(ip, iz) + Gamma_D_gal * W_ISM.get(ip, iz);
+      rhs.at(iz - 1) += dt * Q_w / (double)number_of_operators;
+    }
+
+    GSL::gsl_linalg_solve_tridiag(central_diagonal, upper_diagonal, lower_diagonal, rhs, W_up);
+
+    for (size_t iz = 1; iz < z_size - 1; ++iz) {
+      double value = W_up.at(iz - 1);  // min(W_up.at(iz), 1. / k_);
+      W_sg.get(ip, iz) = std::max(value, 0.);
+    }
+  }
+}

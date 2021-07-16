@@ -164,17 +164,25 @@ void Waves::evolve_f_in_p(const size_t& number_of_operators, const double& t_now
     }
   }  // for
 }
+
 void Waves::evolve_waves(const size_t& number_of_operators) {
 #pragma omp parallel for
   for (size_t ip = 0; ip < p_size; ++ip) {
-    auto k_ = 1. / larmor_radius(p.at(ip), par.magnetic_field);
+    const double k = 1. / larmor_radius(p.at(ip), par.magnetic_field);
     for (size_t iz = 0; iz < z_size; ++iz) {
-      auto W = W_sg.get(ip, iz);
-      auto Gamma_D = factor_damping * (par.do_kolmogorov) ? std::pow(k_, 1.5) * std::sqrt(W) : std::pow(k_, 2.) * W;
-      auto Gamma_D_gal = factor_damping * pow(k_, 1.5) * sqrt(W_ISM.get(ip, iz));
-      auto WGamma_CR = factor_growth / k_ * pow4(p.at(ip)) * df_dz.get(ip, iz);
-      auto Q_w = WGamma_CR - Gamma_D * W_sg.get(ip, iz) + Gamma_D_gal * W_ISM.get(ip, iz);
-      auto value = W_sg.get(ip, iz) + dt * Q_w / (double)number_of_operators;
+      const double W = W_sg.get(ip, iz);
+      const double W_ref = W_ISM.get(ip, iz);
+      const double WGamma_D = factor_damping * (par.do_kolmogorov) ? std::pow(k * W, 1.5) : std::pow(k * W, 2.);
+      const double WGamma_D_gal = factor_damping * std::pow(k * W_ref, 1.5);
+      const double WGamma_CR = factor_growth / k * pow4(p.at(ip)) * df_dz.get(ip, iz);
+      double Q_w = WGamma_CR;
+      if (par.do_kolmogorov)
+        Q_w += factor_damping * (-std::pow(k * W, 1.5) + std::pow(k * W_ref, 1.5));
+      else {
+        Q_w += factor_damping * (-std::pow(k * W, 2.) + std::pow(k * W_ref, 1.5));
+        exit(1);  // TODO remove this
+      }
+      const double value = W_sg.get(ip, iz) + dt * Q_w / (double)number_of_operators;
       // value = std::min(value, 1. / k_);
       W_sg.get(ip, iz) = std::max(value, 0.);
     }
