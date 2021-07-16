@@ -124,10 +124,11 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
       test_total_energy(counter, dt);
       test_boundary_conditions();
       test_courant_conditions();
-      dump(counter * dt);
+      // dump(counter * dt);
       // dump_analytical_test(counter * dt);
-    }  // if
-  }    // while
+      dump_single(counter * dt, 10. * mks::pc, 10. * mks::TeV_c);  // TODO remove this at the end!
+    }
+  }
   print_status(counter, start);
 }
 
