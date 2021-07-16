@@ -37,6 +37,8 @@ class Params {
   void set_magnetic_field(double magnetic_field) { m_magnetic_field = magnetic_field; };
   void set_do_kolmogorov(bool do_kolmogorov) { m_do_kolmogorov = do_kolmogorov; };
   void set_do_3D(bool do_3D) { m_do_3D = do_3D; };
+  void set_spin_down_luminosity(double luminosity) { m_spin_down_luminosity = luminosity; }
+  void set_source_size(double source_size) { m_source_size = source_size; }
 
   const double& correlation_length = m_correlation_length;
   const double& D_gal = m_D_gal;
