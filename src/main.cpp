@@ -7,18 +7,20 @@
 
 int main() {
   CRWAVES::Params par;
-  par.set_init_filename("test_3.5_kol");
+  par.set_init_filename("test0.1pc_3.5_kol_3.8e33");
   par.set_do_selfgeneration(true);
   par.set_alpha(3.5);
   par.set_magnetic_field(1. * mks::microgauss);
   par.set_do_kolmogorov(true);
   par.set_do_3D(false);
+  par.set_spin_down_luminosity(3.8e33 * mks::erg / mks::s);
+  par.set_source_size(0.1 * mks::pc);
 
   CRWAVES::Waves W(par);
 
   std::cout << " ... init \n";
 
-  W.build_z_axis(100 * mks::pc, 601);
+  W.build_z_axis(100 * mks::pc, 401);
   W.build_p_axis(1e2 * mks::GeV_c, mks::PeV_c, 32 * 4);
   W.build_CR_source_term();
   W.build_W_ISM();
@@ -34,9 +36,10 @@ int main() {
 
   std::cout << " ... evolve\n";
 
-  double time_step = 0.1 * mks::year;
-  double max_counter = 10 * 1000 * 300;  // 300 kyr
-  double dump_counter = 10 * 1000;       // 1 kyr;
+  const double time_step = 0.1 * mks::year;
+  const int kyr_counter = 10 * 1000;
+  const int max_counter = 1000 * kyr_counter;
+  const int dump_counter = 1 * kyr_counter;
 
   W.evolve(time_step, max_counter, dump_counter);
 
