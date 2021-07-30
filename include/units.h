@@ -4,13 +4,9 @@
 
 #include <cmath>
 
-namespace mks {
+#include "utilities/misc.h"
 
-// powers
-#define pow2(A) ((A) * (A))
-#define pow3(A) ((A) * (A) * (A))
-#define pow4(A) ((A) * (A) * (A) * (A))
-#define pow5(A) ((A) * (A) * (A) * (A) * (A))
+namespace mks {
 
 // MKS units
 static const double meter = 1;
@@ -19,8 +15,8 @@ static const double second = 1;
 static const double ampere = 1;
 static const double kelvin = 1;
 static const double mole = 1;
-static const double joule = kilogram * pow2(meter) / pow2(second);
-static const double tesla = kilogram / ampere / pow2(second);
+static const double joule = kilogram * utils::pow_integer<2>(meter / second);
+static const double tesla = kilogram / ampere / utils::pow_integer<2>(second);
 static const double coulomb = ampere * second;
 
 // derived units
@@ -82,8 +78,8 @@ static const double electron_mass_c = electron_mass * c_light;
 static const double electron_mass_c2 = electron_mass * c_squared;
 static const double proton_mass = 1.6726219e-27 * kilogram;
 static const double sun_mass = 1.989e30 * kg;
-static const double sigma_th = 6.6524e-29 * pow2(meter);
-static const double h_planck = 6.62607004e-34 * pow2(meter) * kg / s;
+static const double sigma_th = 6.6524e-29 * utils::pow_integer<2>(meter);
+static const double h_planck = 6.62607004e-34 * utils::pow_integer<2>(meter) * kg / s;
 static const double k_boltzmann = 1.3806488e-23 * joule / kelvin;
 static const double elementary_charge = 1.60217662e-19 * coulomb;
 static const double vacuum_permeability = 4e-7 * M_PI * tesla * meter / ampere;
