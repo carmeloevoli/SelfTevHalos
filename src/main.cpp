@@ -7,7 +7,7 @@
 
 int main() {
   CRWAVES::Params par;
-  par.set_init_filename("test0.1pc_3.5_kol_3.8e33");
+  par.set_init_filename("testN0.1pc_3.5_kol_3.8e33");
   par.set_do_selfgeneration(true);
   par.set_alpha(3.5);
   par.set_magnetic_field(1. * mks::microgauss);
@@ -15,13 +15,15 @@ int main() {
   par.set_do_3D(false);
   par.set_spin_down_luminosity(3.8e33 * mks::erg / mks::s);
   par.set_source_size(0.1 * mks::pc);
+  par.set_p_size(32 * 4);
+  par.set_z_size(401);
 
   CRWAVES::Waves W(par);
 
   std::cout << " ... init \n";
 
-  W.build_z_axis(100 * mks::pc, 401);
-  W.build_p_axis(1e2 * mks::GeV_c, mks::PeV_c, 32 * 4);
+  W.build_z_axis();
+  W.build_p_axis();
   W.build_CR_source_term();
   W.build_W_ISM();
   W.build_W_sg();

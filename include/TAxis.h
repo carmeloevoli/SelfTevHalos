@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-#include "utilities.h"
+#include "utilities/misc.h"
 
 namespace CRWAVES {
 
@@ -84,7 +84,7 @@ class TAxis {
       std::cerr << "Error! Value " << value << " outside the range : " << min << " ... " << max << "\n";
       exit(-1);
     } else {
-      return find_nearest(axis, value);
+      return utils::closestIndex(value, axis);
     }
   }
 
@@ -97,7 +97,7 @@ class TAxis {
       exit(-1);
     } else {
       reference_value = referenceValue;
-      idx = find_nearest(axis, reference_value);
+      idx = utils::closestIndex(referenceValue, axis);
     }
   }
 
@@ -106,4 +106,4 @@ class TAxis {
 
 }  // namespace CRWAVES
 
-#endif /* TAXIS_H_ */
+#endif  // TAXIS_H_

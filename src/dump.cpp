@@ -3,6 +3,8 @@
 
 namespace CRWAVES {
 
+#define pow3 utils::pow_integer<3>
+
 std::string Waves::generate_output_filename(const std::string& s, const double& t) {
   std::stringstream sstream;
   sstream << "output/" << s << "_" << par.init_filename;

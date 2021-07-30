@@ -9,6 +9,8 @@
 
 namespace CRWAVES {
 
+#define pow2 utils::pow_integer<2>
+
 class AnalyticSolution {
  public:
   AnalyticSolution() {}

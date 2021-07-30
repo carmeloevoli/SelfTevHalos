@@ -9,6 +9,8 @@
 
 namespace CRWAVES {
 
+#define pow3 utils::pow_integer<3>
+
 void Waves::set_dt(const double& dt) {
   this->dt = dt;
   this->dt_half = .5 * dt;

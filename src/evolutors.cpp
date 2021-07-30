@@ -4,6 +4,8 @@
 
 #define OMP_NUM_THREADS 4
 
+#define pow4 utils::pow_integer<4>
+
 namespace CRWAVES {
 
 void Waves::evolve_f_in_z(const size_t& number_of_operators, const double& t_now) {

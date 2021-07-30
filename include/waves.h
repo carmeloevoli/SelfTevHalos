@@ -16,10 +16,10 @@
 #include "TAxis.h"
 #include "TGrid2D.h"
 #include "analytical_solution.h"
+#include "common.h"
 #include "params.h"
 #include "tridiag.h"
 #include "units.h"
-#include "utilities.h"
 
 namespace CRWAVES {
 
@@ -29,13 +29,9 @@ class Waves {
   virtual ~Waves();
 
   // waves.cpp
-  void build_p_axis(const double& pc_min, const double& pc_max, const size_t& pc_size);
-  void build_z_axis(const double& halo_size, const size_t& k_size);
-  double compute_constant_CR_source_term_1D();
-  double compute_constant_CR_source_term_3D();
-  double compute_constant_CR_source_term();
+  void build_p_axis();
+  void build_z_axis();
 
-  void build_CR_source_term();
   void build_W_ISM();
   void build_W_sg();
   void build_f_cr();
@@ -43,6 +39,12 @@ class Waves {
   void build_v_A();
   void build_energy_losses();
   void build_analytical_solution();
+
+  // source.cpp
+  double compute_constant_CR_source_term_1D();
+  double compute_constant_CR_source_term_3D();
+  double compute_constant_CR_source_term();
+  void build_CR_source_term();
 
   // dump.cpp
   std::string generate_output_filename(const std::string& s, const double& t);

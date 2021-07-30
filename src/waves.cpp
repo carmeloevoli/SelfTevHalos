@@ -17,19 +17,19 @@ Waves::Waves(const Params& params) : par(params) {
 
 Waves::~Waves() { std::cout << "calling main destructor\n"; }
 
-void Waves::build_p_axis(const double& p_min, const double& p_max, const size_t& p_size) {
-  p.build_log_axis(p_min, p_max, p_size);
+void Waves::build_p_axis() {
+  p.build_log_axis(par.p_min, par.p_max, par.p_size);
   this->p_size = p.get_size();
-  p.set_reference_value(sqrt(p_min * p_max));
+  p.set_reference_value(std::sqrt(par.p_min * par.p_max));
   p.show_axis("p", mks::GeV_c);
   dlnp = std::log(p.at(1) / p.at(0));
 }
 
-void Waves::build_z_axis(const double& halo_size, const size_t& z_size) {
+void Waves::build_z_axis() {
   if (par.do_3D)
-    z.build_lin_axis(0, halo_size, z_size);
+    z.build_lin_axis(0, par.halo_size, par.z_size);
   else
-    z.build_lin_axis(-halo_size, halo_size, z_size);
+    z.build_lin_axis(-par.halo_size, par.halo_size, par.z_size);
   this->z_size = z.get_size();
   z.set_reference_value(0);
   z.show_axis("z", mks::kpc);
