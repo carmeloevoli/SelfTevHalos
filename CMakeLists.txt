@@ -4,28 +4,33 @@ cmake_minimum_required(VERSION 3.1)
 set( CMAKE_VERBOSE_MAKEFILE off )
 set( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 set( CMAKE_CXX_COMPILER "/usr/local/bin/g++-10" )
-set( CMAKE_CXX_FLAGS "-O3 -ftree-vectorize -std=c++11 -fopenmp -DTHREADS=16" )
+set( CMAKE_CXX_FLAGS "-O3 -ftree-vectorize -std=c++14 -fopenmp -DTHREADS=16" )
 set( CRWAVES_EXTRA_INCLUDES )
 set( CRWAVES_EXTRA_LIBRARIES )
 
 include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( CRWAVES_SRCS 
-     src/diffusion.cpp
-     src/dump.cpp
-     src/energy_losses.cpp
-     src/evolutors.cpp
-     src/evolve.cpp
-     src/main.cpp
-     src/params.cpp
-     src/sources.cpp
-     src/tridiag.cpp
-     src/utilities.cpp
-     src/waves.cpp
+src/sources.cpp
+src/common.cpp
+    src/diffusion.cpp
+    src/dump.cpp
+    src/energy_losses.cpp
+    src/evolutors.cpp
+    src/evolve.cpp
+    src/main.cpp
+    src/params.cpp
+    src/tridiag.cpp
+    src/waves.cpp
 )
 
 # create the output dir
 file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/output)
+
+# utilities (provided)
+add_subdirectory(libs/utilities)
+list(APPEND CRWAVES_EXTRA_LIBRARIES utilities)
+list(APPEND CRWAVES_EXTRA_INCLUDES libs/utilities/include)
 
 # GSL (external)
 find_package(GSL)
