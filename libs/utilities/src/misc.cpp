@@ -62,11 +62,6 @@ size_t closestIndex(double x, const std::vector<double> &X) {
     return i1;
 }
 
-void printVector(std::vector<double> const &input) {
-  std::for_each(input.begin(), input.end(), [](const auto &e) { std::cout << e << " "; });
-  std::cout << "\n";
-}
-
 // size_t find_nearest(const std::vector<double>& x, const double& x0) {
 //   double min_distance = 1e100;
 //   size_t min_value = 0;

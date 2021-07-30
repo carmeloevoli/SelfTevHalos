@@ -1,6 +1,9 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#include <algorithm>
+#include <cmath>
+#include <iostream>
 #include <vector>
 
 namespace utils {
@@ -22,7 +25,11 @@ double interpolateEquidistant(double x, double lo, double hi, const std::vector<
 size_t closestIndex(double x, const std::vector<double>& X);
 
 // Print a vector
-void printVector(std::vector<double> const& input);
+template <typename T>
+void printVector(std::vector<T> const& input) {
+  std::for_each(input.begin(), input.end(), [](const auto& e) { std::cout << e << " "; });
+  std::cout << "\n";
+}
 
 // pow implementation as template for integer exponents pow_integer<2>(x)
 // evaluates to x*x
@@ -34,6 +41,34 @@ inline double pow_integer(double base) {
 template <>
 inline double pow_integer<0>(double base) {
   return 1;
+}
+
+template <typename T>
+std::vector<T> buildLogAxis(const T& min, const T& max, const size_t& size) {
+  using std::exp;
+  using std::log;
+  const T delta_log = exp(log(max / min) / (size - 1));
+  std::vector<T> axis(size);
+  int i = 0;
+  generate(axis.begin(), axis.end(), [min, delta_log, &i]() { return exp(log(min) + (T)(i++) * log(delta_log)); });
+  return axis;
+}
+
+template <typename T>
+std::vector<T> buildLinAxis(const T& min, const T& max, const size_t& size) {
+  const T dx = (max - min) / (T)(size - 1);
+  std::vector<T> axis(size);
+  int i = 0;
+  generate(axis.begin(), axis.end(), [min, dx, &i]() { return min + dx * (T)(i++); });
+  return axis;
+}
+
+template <typename T>
+void infoAxis(std::vector<T> const& input, const std::string& name, const T& units) {
+  const auto min = *min_element(input.begin(), input.end()) / units;
+  const auto max = *max_element(input.begin(), input.end()) / units;
+  const auto size = input.size();
+  std::cout << name << " axis in : " << min << " ... " << max << " with " << size << " elements.\n";
 }
 
 }  // namespace utils
