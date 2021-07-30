@@ -7,22 +7,10 @@
 #include <sstream>
 #include <string>
 
+#include "common.h"
 #include "units.h"
-#include "utilities.h"
 
 namespace CRWAVES {
-
-// template <typename T>
-// class Param {
-//  public:
-//   Param() {}
-//   virtual ~Param() {}
-//   T get() const { return value; }
-//   void set(const T &value) { this->value = value; }
-
-//  protected:
-//   T value = T();
-// };
 
 class Params {
  public:
@@ -39,10 +27,17 @@ class Params {
   void set_do_3D(bool do_3D) { m_do_3D = do_3D; };
   void set_spin_down_luminosity(double luminosity) { m_spin_down_luminosity = luminosity; }
   void set_source_size(double source_size) { m_source_size = source_size; }
+  void set_p_size(size_t p_size) { m_p_size = p_size; }
+  void set_z_size(size_t z_size) { m_z_size = z_size; }
 
+  const size_t& p_size = m_p_size;
+  const size_t& z_size = m_z_size;
   const double& correlation_length = m_correlation_length;
   const double& D_gal = m_D_gal;
   const double& D_gal_ref = m_D_gal_ref;
+  const double& halo_size = m_halo_size;
+  const double& p_min = m_p_min;
+  const double& p_max = m_p_max;
   const double& magnetic_field = m_magnetic_field;
   const double& ck = m_ck;
   const double& alpha = m_alpha;
@@ -60,9 +55,14 @@ class Params {
   const std::string& init_filename = m_init_filename;
 
  private:
+  size_t m_p_size;
+  size_t m_z_size;
   double m_correlation_length;
   double m_D_gal;
   double m_D_gal_ref;
+  double m_halo_size;
+  double m_p_min;
+  double m_p_max;
   double m_magnetic_field;
   double m_ck;
   double m_alpha;
