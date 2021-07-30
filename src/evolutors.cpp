@@ -2,11 +2,12 @@
 #include "omp.h"
 #include "waves.h"
 
-#define OMP_NUM_THREADS 4
-
-#define pow4 utils::pow_integer<4>
+#define OMP_NUM_THREADS THREADS
 
 namespace CRWAVES {
+
+#define pow2 utils::pow_integer<2>
+#define pow4 utils::pow_integer<4>
 
 void Waves::evolve_f_in_z(const size_t& number_of_operators, const double& t_now) {
   if (par.do_3D)
@@ -18,7 +19,7 @@ void Waves::evolve_f_in_z(const size_t& number_of_operators, const double& t_now
 void Waves::evolve_f_in_z_1D(const size_t& number_of_operators, const double& t_now) {
   double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
 
-#pragma omp parallel for
+#pragma omp parallel for num_threads(OMP_NUM_THREADS)
   for (int ip = 0; ip < p_size - 1; ++ip) {
     std::vector<double> rhs(z_size - 2);
     std::vector<double> central_diagonal(z_size - 2);
@@ -68,7 +69,7 @@ void Waves::evolve_f_in_z_1D(const size_t& number_of_operators, const double& t_
 void Waves::evolve_f_in_z_3D(const size_t& number_of_operators, const double& t_now) {
   double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
 
-#pragma omp parallel for
+#pragma omp parallel for num_threads(OMP_NUM_THREADS)
   for (int ip = 0; ip < p_size - 1; ++ip) {
     std::vector<double> rhs(z_size - 1);
     std::vector<double> central_diagonal(z_size - 1);
@@ -121,7 +122,7 @@ void Waves::evolve_f_in_z_3D(const size_t& number_of_operators, const double& t_
 }
 
 void Waves::evolve_f_in_p(const size_t& number_of_operators, const double& t_now) {
-#pragma omp parallel for
+#pragma omp parallel for num_threads(OMP_NUM_THREADS)
   for (int iz = 1; iz < z_size - 1; ++iz) {
     std::vector<double> rhs(p_size - 1);
     std::vector<double> central_diagonal(p_size - 1);

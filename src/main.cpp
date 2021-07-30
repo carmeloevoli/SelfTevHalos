@@ -17,6 +17,7 @@ int main() {
   par.set_source_size(0.1 * mks::pc);
   par.set_p_size(32 * 4);
   par.set_z_size(401);
+  par.print();
 
   CRWAVES::Waves W(par);
 

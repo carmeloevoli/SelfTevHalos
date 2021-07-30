@@ -3,12 +3,13 @@
 
 namespace CRWAVES {
 
+#define pow2 utils::pow_integer<2>
 #define pow3 utils::pow_integer<3>
 
 std::string Waves::generate_output_filename(const std::string& s, const double& t) {
   std::stringstream sstream;
   sstream << "output/" << s << "_" << par.init_filename;
-  sstream << "_nz_" << z.get_size() << "_np_" << p.get_size();
+  sstream << "_nz_" << z.size() << "_np_" << p.size();
   sstream << "_t_" << t / mks::kyr;
   sstream << ".txt";
   std::string out = sstream.str();
@@ -22,8 +23,8 @@ void Waves::dump(const double& t) {
   outfile << "# z[pc]  p[GeV/c]  fcr[GeV^-3 m^-3]  Dzz[cm^2/s]  dfdz[GeV^-3 m^-3 kpc^-1]  diff.flux[GeV^-3 "
              "m^-3 s^-1] W_sg[mks] Q_cr[mks]\n";
   outfile << std::scientific << std::setprecision(4);
-  for (size_t iz = 0; iz < z.get_size(); ++iz)
-    for (size_t ip = 0; ip < p.get_size(); ++ip) {
+  for (size_t iz = 0; iz < z.size(); ++iz)
+    for (size_t ip = 0; ip < p.size(); ++ip) {
       outfile << z.at(iz) / mks::pc << " ";
       outfile << p.at(ip) / mks::GeV_c << " ";
       outfile << f_cr.get(ip, iz) / (1. / pow3(mks::GeV_c) / pow3(mks::meter)) << " ";
@@ -45,8 +46,8 @@ void Waves::dump_single(const double& t, const double& z_dump, const double& p_d
   outfile << "# z[pc]  p[GeV/c]  fcr[GeV^-3 m^-3]  Dzz[cm^2/s]  dfdz[GeV^-3 m^-3 kpc^-1]  diff.flux[GeV^-3 "
              "m^-3 s^-1] W_sg[mks] Q_cr[mks]\n";
   outfile << std::scientific << std::setprecision(4);
-  const auto iz = z.get_idx(z_dump);
-  const auto ip = p.get_idx(p_dump);
+  const auto iz = utils::closestIndex(z_dump, z);
+  const auto ip = utils::closestIndex(p_dump, p);
   {
     outfile << z.at(iz) / mks::pc << " ";
     outfile << p.at(ip) / mks::GeV_c << " ";
@@ -62,23 +63,23 @@ void Waves::dump_single(const double& t, const double& z_dump, const double& p_d
   std::cout << "... done!\n";
 }
 
-void Waves::dump_analytical_test(const double& t) {
-  std::string filename = generate_output_filename("test", t);
-  std::cout << "dumping analytical solution on this file: " << filename << " ... ";
-  std::ofstream outfile(filename.c_str());
-  outfile << "# z[pc]  p[GeV/c]  fcr[GeV^-3 m^-3]  fcr_a[GeV^-3 m^-3] \n";
-  outfile << std::scientific << std::setprecision(4);
-  double units = (1. / pow3(mks::GeV_c) / pow3(mks::meter));
-  for (size_t iz = 0; iz < z.get_size(); ++iz)
-    for (size_t ip = 0; ip < p.get_size(); ++ip) {
-      outfile << z.at(iz) / mks::pc << " ";
-      outfile << p.at(ip) / mks::GeV_c << " ";
-      outfile << f_cr.get(ip, iz) / units << " ";
-      outfile << solution.f(z.at(iz), t, p.at(ip)) / units << " ";
-      outfile << "\n";
-    }
-  outfile.close();
-  std::cout << "... done!\n";
-}
+// void Waves::dump_analytical_test(const double& t) {
+//   std::string filename = generate_output_filename("test", t);
+//   std::cout << "dumping analytical solution on this file: " << filename << " ... ";
+//   std::ofstream outfile(filename.c_str());
+//   outfile << "# z[pc]  p[GeV/c]  fcr[GeV^-3 m^-3]  fcr_a[GeV^-3 m^-3] \n";
+//   outfile << std::scientific << std::setprecision(4);
+//   double units = (1. / pow3(mks::GeV_c) / pow3(mks::meter));
+//   for (size_t iz = 0; iz < z.size(); ++iz)
+//     for (size_t ip = 0; ip < p.size(); ++ip) {
+//       outfile << z.at(iz) / mks::pc << " ";
+//       outfile << p.at(ip) / mks::GeV_c << " ";
+//       outfile << f_cr.get(ip, iz) / units << " ";
+//       outfile << solution.f(z.at(iz), t, p.at(ip)) / units << " ";
+//       outfile << "\n";
+//     }
+//   outfile.close();
+//   std::cout << "... done!\n";
+// }
 
 }  // namespace CRWAVES

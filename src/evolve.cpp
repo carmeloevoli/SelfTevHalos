@@ -9,6 +9,7 @@
 
 namespace CRWAVES {
 
+#define pow2 utils::pow_integer<2>
 #define pow3 utils::pow_integer<3>
 
 void Waves::set_dt(const double& dt) {
@@ -36,9 +37,9 @@ void Waves::print_status(const size_t& counter, const time_t& start) {
 double Waves::compute_total_energy_in_fcr() {
   const double R = 2 * mks::pc;
   double value = 0;
-  for (size_t iz = 0; iz < z.get_size(); ++iz) {
+  for (size_t iz = 0; iz < z.size(); ++iz) {
     double I_p = 0;
-    for (size_t ip = 0; ip < p.get_size() - 1; ++ip) {
+    for (size_t ip = 0; ip < p.size() - 1; ++ip) {
       I_p += pow3(p.at(ip)) * f_cr.get(ip, iz) * (p.at(ip) * mks::c_light);
     }
     if (par.do_3D)
@@ -57,9 +58,9 @@ double Waves::compute_total_energy_in_fcr() {
 double Waves::compute_source_luminosity() {
   const double R = 2 * mks::pc;
   double value = 0;
-  for (size_t iz = 0; iz < z.get_size(); ++iz) {
+  for (size_t iz = 0; iz < z.size(); ++iz) {
     double I_p = 0;
-    for (size_t ip = 0; ip < p.get_size() - 1; ++ip) {
+    for (size_t ip = 0; ip < p.size() - 1; ++ip) {
       I_p += pow3(p.at(ip)) * Q_cr.get(ip, iz) * (p.at(ip) * mks::c_light);
     }
     if (par.do_3D)
@@ -87,19 +88,19 @@ void Waves::test_total_energy(const size_t& counter, const double& dt) {
 
 void Waves::test_boundary_conditions() {
   double value = 0;
-  for (size_t ip = 0; ip < p.get_size(); ++ip) {
+  for (size_t ip = 0; ip < p.size(); ++ip) {
     value += fabs(f_cr.get(ip, z_size - 1));
     // value += fabs(f_cr.get(ip, 0));
   }
-  for (size_t iz = 0; iz < z.get_size(); ++iz) value += fabs(f_cr.get(p_size - 1, iz));
+  for (size_t iz = 0; iz < z.size(); ++iz) value += fabs(f_cr.get(p_size - 1, iz));
   std::cout << " -- total CRs at border : " << value << "\n";
 }
 
 void Waves::test_courant_conditions() {
   double dt_dz2 = dt / pow2(dz);
   double beta_max = 0;
-  for (size_t ip = 0; ip < p.get_size(); ++ip)
-    for (size_t iz = 0; iz < z.get_size(); ++iz) {
+  for (size_t ip = 0; ip < p.size(); ++ip)
+    for (size_t iz = 0; iz < z.size(); ++iz) {
       double beta = D_zz.get(ip, iz) * dt_dz2;
       beta_max = std::max(beta, beta_max);
     }

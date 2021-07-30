@@ -13,9 +13,7 @@
 #include <sstream>
 #include <vector>
 
-#include "TAxis.h"
 #include "TGrid2D.h"
-#include "analytical_solution.h"
 #include "common.h"
 #include "params.h"
 #include "tridiag.h"
@@ -38,7 +36,7 @@ class Waves {
   void build_D_zz();
   void build_v_A();
   void build_energy_losses();
-  void build_analytical_solution();
+  //  void build_analytical_solution();
 
   // source.cpp
   double compute_constant_CR_source_term_1D();
@@ -49,7 +47,7 @@ class Waves {
   // dump.cpp
   std::string generate_output_filename(const std::string& s, const double& t);
   void dump(const double& t);
-  void dump_analytical_test(const double& t);
+  // void dump_analytical_test(const double& t);
   void dump_single(const double& t, const double& z_dump, const double& p_dump);
 
   // diffusion.cpp
@@ -79,6 +77,7 @@ class Waves {
 
  private:
   Params par;
+
   double dt = 0;
   double dt_half = 0;
   double dz = 0;
@@ -93,9 +92,9 @@ class Waves {
   double factor_damping = 0;
   double factor_growth = 0;
 
-  AnalyticSolution solution;
-  TAxis<double> p;
-  TAxis<double> z;
+  // AnalyticSolution solution;  TODO remove this and move in tests
+  std::vector<double> p;
+  std::vector<double> z;
   TGrid2D<double> Q_cr;
   TGrid2D<double> W_ISM;
   TGrid2D<double> W_sg;

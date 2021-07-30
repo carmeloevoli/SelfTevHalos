@@ -30,13 +30,13 @@ double Waves::compute_constant_CR_source_term() {
 }
 
 void Waves::build_CR_source_term() {
-  Q_cr.set_grid_size(par.p_size, par.z_size);
-  double q0 = compute_constant_CR_source_term();
-  for (size_t ip = 0; ip < p.get_size(); ++ip) {
-    double F = source_spectrum(p.at(ip), par.alpha, par.source_pmin, par.source_cutoff);
-    for (size_t iz = 0; iz < z.get_size(); ++iz) {
-      double z_ = fabs(z.at(iz));
-      double G = (par.do_3D) ? source_profile_3D(z_, par.source_size) : source_profile_1D(z_, par.source_size);
+  const double q0 = compute_constant_CR_source_term();
+  const double size = par.source_size;
+  for (size_t ip = 0; ip < p.size(); ++ip) {
+    const double F = pl_cutoff(p.at(ip), par.alpha, par.source_pmin, par.source_cutoff);
+    for (size_t iz = 0; iz < z.size(); ++iz) {
+      const double z_abs = fabs(z.at(iz));
+      const double G = (par.do_3D) ? gaussian_3D(z_abs, size) : gaussian_1D(z_abs, size);
       Q_cr.get(ip, iz) = q0 * G * F;
     }
   }

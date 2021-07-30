@@ -11,8 +11,7 @@ set( CRWAVES_EXTRA_LIBRARIES )
 include_directories( "${CMAKE_SOURCE_DIR}" )
 
 set( CRWAVES_SRCS 
-src/sources.cpp
-src/common.cpp
+    src/common.cpp
     src/diffusion.cpp
     src/dump.cpp
     src/energy_losses.cpp
@@ -20,6 +19,7 @@ src/common.cpp
     src/evolve.cpp
     src/main.cpp
     src/params.cpp
+    src/sources.cpp
     src/tridiag.cpp
     src/waves.cpp
 )

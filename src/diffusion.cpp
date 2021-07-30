@@ -1,19 +1,16 @@
 // Copyright (c) 2018 carmeloevoli distributed under the MIT License
-#include <gsl/gsl_errno.h>
-#include <gsl/gsl_spline.h>
-
 #include "waves.h"
+
+#define pow2 utils::pow_integer<2>
 
 namespace CRWAVES {
 
 void Waves::compute_D_zz() {
-#pragma omp parallel for
   for (size_t ip = 0; ip < p_size; ++ip) {
-    double k = 1. / larmor_radius(p.at(ip), par.magnetic_field);
-    double factor = beta(p.at(ip)) * mks::c_light / 3.0 / pow2(k);
+    const double k = 1. / larmor_radius(p.at(ip), par.magnetic_field);
+    const double factor = beta(p.at(ip)) * mks::c_light / 3.0 / pow2(k);
     for (size_t iz = 1; iz < z_size - 1; ++iz) {
-      const double value = factor / W_sg.get(ip, iz);
-      D_zz.get(ip, iz) = value;
+      D_zz.get(ip, iz) = factor / W_sg.get(ip, iz);
     }
     D_zz.get(ip, 0) = D_zz.get(ip, 1);
     D_zz.get(ip, z_size - 1) = D_zz.get(ip, z_size - 2);
@@ -31,7 +28,7 @@ void Waves::compute_dfdz_1D() {
   for (size_t ip = 0; ip < p_size; ++ip) {
     double value = 0;
     for (size_t iz = 1; iz < z_size - 1; ++iz) {
-      if (iz == z.get_idx())
+      if (iz == (z_size - 1) / 2)
         value = fabs(f_cr.get(ip, iz + 1) - f_cr.get(ip, iz)) / dz;
       else
         value = fabs((f_cr.get(ip, iz + 1) - f_cr.get(ip, iz - 1)) / 2. / dz);
