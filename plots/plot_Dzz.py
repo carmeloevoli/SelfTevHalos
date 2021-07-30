@@ -79,9 +79,9 @@ def plot_dzz_withtime():
     ax.plot(t, D20, color='tab:red', linestyle=':')
     ax.plot(t, D50, color='tab:green', linestyle=':')
 
-    get_dzz_in_time('fcr_test1pc_3.5_kol_3.8e33_nz_401_np_128', 1000, 1e4)
+    get_dzz_in_time('fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128', 200, 1e4)
 
-    t, D10, D20, D50 = np.loadtxt('fcr_test1pc_3.5_kol_3.8e33_nz_401_np_128.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+    t, D10, D20, D50 = np.loadtxt('fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
     ax.plot(t, D10, color='tab:blue', linestyle='--', label='source size = 1 pc')
     ax.plot(t, D20, color='tab:red', linestyle=':')
     ax.plot(t, D50, color='tab:green', linestyle=':')
