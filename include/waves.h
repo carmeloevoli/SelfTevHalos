@@ -62,8 +62,8 @@ class Waves {
   // void print_counter2time(const int& max_counter, const int& dump_counter);
   int get_difftime(time_t start) const;
   void print_status(const size_t& counter, const time_t& start) const;
-  // double compute_total_energy_in_fcr();
-  // double compute_source_luminosity();
+  void compute_total_energy_in_fcr();
+  void compute_source_luminosity(double t);
   // void test_total_energy(const size_t& counter, const double& dt);
   void test_boundary_conditions();
   void test_courant_conditions();
