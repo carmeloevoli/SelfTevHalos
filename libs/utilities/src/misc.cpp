@@ -1,5 +1,6 @@
 #include "utilities/misc.h"
 
+#include <cassert>
 #include <cmath>
 #include <iostream>
 
@@ -49,6 +50,20 @@ double interpolateEquidistant(double x, double lo, double hi, const std::vector<
   double p = (x - lo) / dx;
   size_t i = floor(p);
   return Y[i] + (p - i) * (Y[i + 1] - Y[i]);
+}
+
+double NIntegrate(std::vector<double> f, double h) {
+  while (f.size() == 0) f.push_back(0.);
+  auto size = f.size();
+  double I = f.front() + f.back();
+  for (size_t i = 1; i < size - 1; i++) {
+    if (i % 2 == 0)
+      I += 2. * f.at(i);
+    else
+      I += 4. * f.at(i);
+  }
+  I *= h / 3.;
+  return I;
 }
 
 size_t closestIndex(double x, const std::vector<double> &X) {

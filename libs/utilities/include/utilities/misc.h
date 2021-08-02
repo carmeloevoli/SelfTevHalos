@@ -63,6 +63,8 @@ std::vector<T> buildLinAxis(const T& min, const T& max, const size_t& size) {
   return axis;
 }
 
+double NIntegrate(std::vector<double> f, double h);
+
 template <typename T>
 void infoAxis(std::vector<T> const& input, const std::string& name, const T& units) {
   const auto min = *min_element(input.begin(), input.end()) / units;
