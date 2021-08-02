@@ -19,7 +19,7 @@
                 "BAR=100"
             ],
             "forcedInclude": [
-                "${workspaceFolder}/include/units.h"
+                "${workspaceFolder}/include/waves.h"
             ],
             "compilerPath": "/usr/local/bin/gcc-10",
             "cStandard": "gnu17",
@@ -30,7 +30,8 @@
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
-            }
+            },
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
         }
     ],
     "version": 4

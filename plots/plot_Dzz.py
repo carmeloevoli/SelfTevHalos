@@ -5,6 +5,18 @@ plt.style.use('./my.mplstyle')
 import utilities as utils
 import numpy as np
 
+
+def get_D_BC(p):
+    GV = 1.
+    D_0 = 0.35 * 5 * 1e28 / 2.
+    delta = 0.56
+    p_break = 290.
+    delta_delta = 0.22
+    s = 0.09
+    value = D_0 * np.power(p / GV, delta)
+    value /= np.power(1. + np.power(p / p_break, delta_delta / s), s)
+    return value
+
 def plot_dzz_spectrum():
     fig = plt.figure(figsize=(10.5,8))
     ax = fig.add_subplot(111)
@@ -17,6 +29,11 @@ def plot_dzz_spectrum():
     utils.read_spectrum_at_z(ax, filename, 3,  20, alpha, 'g')
 
     ax.legend(['5 pc', '10 pc', '20 pc'], fontsize=22, loc='upper left', frameon=False)
+
+    p = np.logspace(1, 6, 100)
+    D = get_D_BC(p)
+    
+    ax.plot(p, D, color='k', linestyle=':')
 
     ax.set_xlabel(r'p [GeV/c]')
     ax.set_xscale('log')
@@ -72,14 +89,14 @@ def plot_dzz_withtime():
     fig = plt.figure(figsize=(10.5,8))
     ax = fig.add_subplot(111)
     
-    get_dzz_in_time('fcr_test0.1pc_3.5_kol_3.8e33_nz_401_np_128', 600, 1e4)
+#    get_dzz_in_time('fcr_test0.1pc_3.5_kol_3.8e33_nz_401_np_128', 600, 1e4)
+#
+#    t, D10, D20, D50 = np.loadtxt('fcr_test0.1pc_3.5_kol_3.8e33_nz_401_np_128.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:green', linestyle='--', label='source size = 0.1 pc')
+#    ax.plot(t, D20, color='tab:red', linestyle=':')
+#    ax.plot(t, D50, color='tab:green', linestyle=':')
 
-    t, D10, D20, D50 = np.loadtxt('fcr_test0.1pc_3.5_kol_3.8e33_nz_401_np_128.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
-    ax.plot(t, D10, color='tab:green', linestyle='--', label='source size = 0.1 pc')
-    ax.plot(t, D20, color='tab:red', linestyle=':')
-    ax.plot(t, D50, color='tab:green', linestyle=':')
-
-    get_dzz_in_time('fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128', 200, 1e4)
+    get_dzz_in_time('fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128', 140, 1e4)
 
     t, D10, D20, D50 = np.loadtxt('fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
     ax.plot(t, D10, color='tab:blue', linestyle='--', label='source size = 1 pc')
@@ -104,6 +121,6 @@ def plot_dzz_withtime():
 print ('Plotting starts here...')
 
 if __name__ == "__main__":
-#    plot_dzz_withtime()
+    plot_dzz_withtime()
     plot_dzz_spectrum()
 #    plot_dzz_profile()

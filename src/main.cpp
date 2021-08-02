@@ -8,15 +8,14 @@
 int main() {
   CRWAVES::Params par;
   par.set_init_filename("testN0.1pc_3.5_kol_3.8e33");
-  // par.set_do_selfgeneration(true);
-  // par.set_alpha(3.5);
-  // par.set_magnetic_field(1. * mks::microgauss);
-  // par.set_do_kolmogorov(true);
-  // par.set_do_3D(false);
-  // par.set_spin_down_luminosity(3.8e33 * mks::erg / mks::s);
-  // par.set_source_size(0.1 * mks::pc);
-  // par.set_p_size(32 * 4);
-  // par.set_z_size(401);
+  par.set_do_selfgeneration(true);
+  par.set_source_slope(3.5);
+  par.set_do_kolmogorov(true);
+  par.set_do_3D(false);
+  par.set_source_luminosity(3.8e33 * cgs::erg / cgs::second);
+  par.set_source_size(1 * cgs::parsec);
+  par.set_p_size(32 * 4);
+  par.set_z_size(401);
   par.print();
 
   CRWAVES::Waves W(par);
@@ -26,10 +25,9 @@ int main() {
   W.build_energy_losses();
   W.build_CR_source_term();
   W.build_f_cr();
+  W.build_Q_W();
   W.build_W();
   W.build_D_zz();
-
-  // W->build_analytical_solution();
 
   W.dump(0);
   W.print_status(0, time(NULL));

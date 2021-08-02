@@ -1,6 +1,5 @@
 #include "utilities/misc.h"
 
-#include <algorithm>
 #include <cmath>
 #include <iostream>
 

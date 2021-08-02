@@ -77,26 +77,23 @@ void Waves::print_status(const size_t& counter, const time_t& start) const {
 //   std::cout << " -- in CRs: " << in_crs / mks::erg << " / " << in_crs / injected << "\n";
 // }
 
-// void Waves::test_boundary_conditions() {
-//   double value = 0;
-//   for (size_t ip = 0; ip < p.size(); ++ip) {
-//     value += fabs(f_cr.get(ip, z_size - 1));
-//     // value += fabs(f_cr.get(ip, 0));
-//   }
-//   for (size_t iz = 0; iz < z.size(); ++iz) value += fabs(f_cr.get(p_size - 1, iz));
-//   std::cout << " -- total CRs at border : " << value << "\n";
-// }
+void Waves::test_boundary_conditions() {
+  double value = 0;
+  for (size_t ip = 0; ip < p_size; ++ip) value += fabs(f_cr.get(ip, z_size - 1));
+  for (size_t iz = 0; iz < z.size(); ++iz) value += fabs(f_cr.get(p_size - 1, iz));
+  std::cout << " -- total CRs at border : " << value << "\n";
+}
 
-// void Waves::test_courant_conditions() {
-//   double dt_dz2 = dt / pow2(dz);
-//   double beta_max = 0;
-//   for (size_t ip = 0; ip < p.size(); ++ip)
-//     for (size_t iz = 0; iz < z.size(); ++iz) {
-//       double beta = D_zz.get(ip, iz) * dt_dz2;
-//       beta_max = std::max(beta, beta_max);
-//     }
-//   std::cout << " -- max CFL for diffusion " << beta_max << "\n";
-// }
+void Waves::test_courant_conditions() {
+  const double dt_dz2 = dt / pow2(z.at(1) - z.at(0));
+  double beta_max = 0;
+  for (size_t ip = 1; ip < p_size - 1; ++ip)
+    for (size_t iz = 1; iz < z_size - 1; ++iz) {
+      double beta = D_zz.get(ip, iz) * dt_dz2;
+      beta_max = std::max(beta, beta_max);
+    }
+  std::cout << " -- max CFL for diffusion " << beta_max << "\n";
+}
 
 void Waves::evolve(const double& dt, const int& max_counter, const int& dump_counter) {
   this->dt = dt;
@@ -106,20 +103,20 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
     counter++;
     evolve_f_in_z(2, counter * dt);
     evolve_f_in_p(2, counter * dt);
-    //     compute_dfdz();
-    //     if ((double)counter * dt > 0.1 * mks::kyr && par.do_selfgeneration) {
-    //       // evolve_waves_in_z(1);
-    //       evolve_waves(1);
-    //       compute_D_zz();
-    //     }
+    if ((double)counter * dt > 0.1 * cgs::kyr && par.do_selfgeneration) {
+      compute_dfdz();
+      compute_Q_W();
+      // evolve_waves_in_z(1);
+      evolve_waves();
+      compute_D_zz();
+    }
     if (counter % dump_counter == 0) {
       print_status(counter, start);
       //       test_total_energy(counter, dt);
-      //       test_boundary_conditions();
-      //       test_courant_conditions();
-      //       // dump(counter * dt);
-      //       // dump_analytical_test(counter * dt);
-      //       dump_single(counter * dt, 10. * mks::pc, 10. * mks::TeV_c);  // TODO remove this at the end!
+      test_boundary_conditions();
+      test_courant_conditions();
+      // dump(counter * dt);
+      dump_single(counter * dt, 10. * cgs::parsec, 10. * cgs::TV);  // TODO remove this at the end!
     }
   }
 }

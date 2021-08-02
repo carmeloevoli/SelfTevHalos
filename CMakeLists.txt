@@ -31,14 +31,13 @@ endif(GSL_FOUND)
 
 # add source files
 set( CRWAVES_SRCS 
+    src/builders.cpp
     src/common.cpp
     src/diffusion.cpp
     src/dump.cpp
-    src/energy_losses.cpp
     src/evolutors.cpp
     src/evolve.cpp
     src/params.cpp
-    src/sources.cpp
     src/tridiag.cpp
     src/waves.cpp
 )
