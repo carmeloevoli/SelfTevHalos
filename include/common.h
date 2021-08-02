@@ -33,6 +33,10 @@ inline double source_evolution(double t, double t_decay) {
   return 1. / utils::pow_integer<2>(1. + t / t_decay);
 }
 
+inline double integrate_source_evolution(double t, double t_decay) {
+  return t * t_decay / (t + t_decay);
+}
+
 inline double initial_luminosity(double L_today, double age, double t_decay) {
   return L_today * utils::pow_integer<2>(1. + age / t_decay);
 }
