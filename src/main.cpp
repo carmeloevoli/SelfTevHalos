@@ -13,7 +13,6 @@ int main() {
   par.set_do_kolmogorov(true);
   par.set_do_3D(false);
   par.set_source_luminosity(3.8e33 * cgs::erg / cgs::second);
-  par.set_source_size(1 * cgs::parsec);
   par.set_p_size(32 * 4);
   par.set_z_size(401);
   par.print();
