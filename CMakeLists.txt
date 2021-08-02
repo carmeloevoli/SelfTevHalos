@@ -53,6 +53,10 @@ target_link_libraries (crwaves CRWAVES_LIB ${CRWAVES_LIBRARIES})
 add_executable(test_common tests/test_common.cpp)
 target_link_libraries (test_common CRWAVES_LIB ${CRWAVES_LIBRARIES})
 
+add_executable(test_nintegrate tests/test_nintegrate.cpp)
+target_link_libraries (test_nintegrate CRWAVES_LIB ${CRWAVES_LIBRARIES})
+
+
 # Show summary.
 message (STATUS "CMAKE_SYSTEM .......... = ${CMAKE_SYSTEM}")
 message (STATUS "BUILD_SHARED_LIBS ..... = ${BUILD_SHARED_LIBS}")
