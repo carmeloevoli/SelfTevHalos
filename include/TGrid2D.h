@@ -2,7 +2,6 @@
 #ifndef TGRID2D_H_
 #define TGRID2D_H_
 
-#include <cassert>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -26,11 +25,7 @@ class TGrid2D {
   }
 
   /** Accessor / Mutator */
-  T &get(size_t ix, size_t iz) {
-    assert(ix >= 0 && ix < Nx);
-    assert(iz >= 0 && iz < Nz);
-    return grid[ix * Nz + iz];
-  }
+  T &get(size_t ix, size_t iz) { return grid[ix * Nz + iz]; }
 
   T &get(const size_t &i) { return grid[i]; }
 
@@ -60,13 +55,13 @@ class TGrid2D {
 
   size_t getNx() const { return Nx; }
 
-  void setNx(size_t nx) { Nx = nx; }
-
   size_t getNz() const { return Nz; }
 
-  void setNz(size_t nz) { Nz = nz; }
-
   size_t get_size() const { return (Nx * Nz); }
+
+  void fill(const T &value) { std::fill(grid.begin(), grid.end(), value); }
+
+  void copy(const std::vector<T> &v) { std::copy(v.begin(), v.end(), grid.begin()); }
 
   void show_grid(const std::string &name, const T &units) const {
     std::cout << name << " grid in : " << min_value() / units << " ... " << max_value() / units << " with "

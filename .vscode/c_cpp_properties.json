@@ -16,7 +16,6 @@
                 "${workspaceFolder}/include/**"
             ],
             "defines": [
-                "EVOLI2019",
                 "BAR=100"
             ],
             "forcedInclude": [
@@ -24,16 +23,14 @@
             ],
             "compilerPath": "/usr/local/bin/gcc-10",
             "cStandard": "gnu17",
-            "cppStandard": "c++11",
+            "cppStandard": "c++14",
             "browse": {
                 "path": [
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""
-            },
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            }
         }
     ],
     "version": 4

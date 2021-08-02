@@ -11,7 +11,7 @@ def plot_dzz_spectrum():
 
     alpha = 0
 
-    filename = 'output/fcr_test_3.5_kol_t_50_nz_601_np_128.txt'
+    filename = 'output/fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128_t_0.txt'
     utils.read_spectrum_at_z(ax, filename, 3,   5, alpha, 'b')
     utils.read_spectrum_at_z(ax, filename, 3,  10, alpha, 'r')
     utils.read_spectrum_at_z(ax, filename, 3,  20, alpha, 'g')
@@ -104,6 +104,6 @@ def plot_dzz_withtime():
 print ('Plotting starts here...')
 
 if __name__ == "__main__":
-    plot_dzz_withtime()
-#    plot_dzz_spectrum()
+#    plot_dzz_withtime()
+    plot_dzz_spectrum()
 #    plot_dzz_profile()
