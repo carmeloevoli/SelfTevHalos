@@ -19,16 +19,33 @@ class Params {
   void print();
   std::string generate_output_filename();
 
-  void set_init_filename(std::string init_filename) { m_init_filename = init_filename; }
-  void set_z_size(size_t z_size) { m_z_size = z_size; }
-  void set_p_size(size_t p_size) { m_p_size = p_size; }
-  void set_source_luminosity(double luminosity) { m_source_luminosity_today = luminosity; }
-  void set_source_slope(double alpha) { m_source_slope = alpha; };
-  void set_source_size(double source_size) { m_source_size = source_size; }
-  void set_magnetic_field(double magnetic_field) { m_magnetic_field = magnetic_field; };
-  void set_do_kolmogorov(bool do_kolmogorov) { m_do_kolmogorov = do_kolmogorov; };
-  void set_do_3D(bool do_3D) { m_do_3D = do_3D; };
-  void set_do_selfgeneration(bool do_selfgeneration) { m_do_selfgeneration = do_selfgeneration; }
+  void set_init_filename(std::string init_filename) {
+    m_init_filename = init_filename;
+  }
+  void set_z_size(size_t z_size) {
+    m_z_size = z_size;
+  }
+  void set_p_size(size_t p_size) {
+    m_p_size = p_size;
+  }
+  void set_source_luminosity(double luminosity) {
+    m_source_luminosity_today = luminosity;
+  }
+  void set_source_slope(double alpha) {
+    m_source_slope = alpha;
+  };
+  void set_magnetic_field(double magnetic_field) {
+    m_magnetic_field = magnetic_field;
+  };
+  void set_do_kolmogorov(bool do_kolmogorov) {
+    m_do_kolmogorov = do_kolmogorov;
+  };
+  void set_do_3D(bool do_3D) {
+    m_do_3D = do_3D;
+  };
+  void set_do_selfgeneration(bool do_selfgeneration) {
+    m_do_selfgeneration = do_selfgeneration;
+  }
 
   const size_t& z_size = m_z_size;
   const size_t& p_size = m_p_size;
@@ -46,7 +63,6 @@ class Params {
   const double& source_cutoff = m_source_cutoff;
   const double& source_tdecay = m_source_tdecay;
   const double& source_luminosity_today = m_source_luminosity_today;
-  const double& source_size = m_source_size;
   const double& tube_radius = m_tube_radius;
   const bool& do_selfgeneration = m_do_selfgeneration;
   const bool& do_3D = m_do_3D;
@@ -65,7 +81,6 @@ class Params {
   double m_source_cutoff{100. * cgs::TV};
   double m_source_tdecay{10 * cgs::kyr};
   double m_source_luminosity_today{3.8e34 * cgs::erg / cgs::second};
-  double m_source_size{1 * cgs::parsec};
   double m_tube_radius{1 * cgs::parsec};
   double m_D_ISM{5e28 * cgs::cm2 / cgs::second};
   double m_D_ISM_p0{3 * cgs::GV};

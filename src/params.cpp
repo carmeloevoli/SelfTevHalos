@@ -35,7 +35,6 @@ void Params::print() {
   parfile << "[injection slope : " << source_slope << "]\n";
   parfile << "[injection cutoff : " << source_cutoff / cgs::TV << " TV]\n";
   parfile << "[injection pmin : " << source_pmin / cgs::GV << " GV]\n";
-  parfile << "[source size  : " << source_size / cgs::parsec << " pc]\n";
   parfile << "[source t_decay : " << source_tdecay / cgs::kyr << " kyr]\n";
   parfile << "[source age : " << source_age / cgs::kyr << " kyr]\n";
   parfile << "[luminosity : " << source_luminosity_today / (cgs::erg / cgs::second) << " erg/s]\n";
