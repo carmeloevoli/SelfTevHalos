@@ -20,7 +20,7 @@ std::string Waves::generate_output_filename(const std::string& s, const double& 
 
 void Waves::dump(const double& t) {
   std::string filename = generate_output_filename("fcr", t);
-  std::cout << "dumping f_cr on this file: " << filename << " ... ";
+  std::cout << "dumping f_cr on this file: " << filename;
   std::ofstream outfile(filename.c_str());
   outfile << "#z[pc] p[GV] f[GV^-3 cm^-3] Dzz[cm^2/s] dfdz[GV^-3 cm^-3 kpc^-1] W_sg[pc] Q_cr[mks] tau_l [s]\n";
   outfile << std::scientific << std::setprecision(5);
@@ -42,7 +42,7 @@ void Waves::dump(const double& t) {
 
 void Waves::dump_single(const double& t, const double& z_dump, const double& p_dump) {
   std::string filename = generate_output_filename("fcr", t);
-  std::cout << "dumping f_cr on this file: " << filename << " ... ";
+  std::cout << "dumping f_cr on this file: " << filename;
   std::ofstream outfile(filename.c_str());
   outfile << "#z[pc] p[GV] f[GV^-3 cm^-3] Dzz[cm^2/s] dfdz[GV^-3 cm^-3 kpc^-1] W_sg[pc] Q_cr[mks] tau_l [s]\n";
   outfile << std::scientific << std::setprecision(4);
