@@ -46,6 +46,9 @@ class Params {
   void set_do_selfgeneration(bool do_selfgeneration) {
     m_do_selfgeneration = do_selfgeneration;
   }
+  void set_do_losses(bool do_losses) {
+    m_do_losses = do_losses;
+  }
 
   const size_t& z_size = m_z_size;
   const size_t& p_size = m_p_size;
@@ -67,6 +70,7 @@ class Params {
   const bool& do_selfgeneration = m_do_selfgeneration;
   const bool& do_3D = m_do_3D;
   const bool& do_kolmogorov = m_do_kolmogorov;
+  const bool& do_losses = m_do_losses;
   const std::string& init_filename = m_init_filename;
 
  private:
@@ -80,7 +84,7 @@ class Params {
   double m_source_pmin{1 * cgs::GV};
   double m_source_cutoff{100. * cgs::TV};
   double m_source_tdecay{10 * cgs::kyr};
-  double m_source_luminosity_today{3.8e34 * cgs::erg / cgs::second};
+  double m_source_luminosity_today{3.8e33 * cgs::erg / cgs::second};
   double m_tube_radius{1 * cgs::parsec};
   double m_D_ISM{5e28 * cgs::cm2 / cgs::second};
   double m_D_ISM_p0{3 * cgs::GV};
@@ -90,6 +94,7 @@ class Params {
   bool m_do_selfgeneration{true};
   bool m_do_3D{false};
   bool m_do_kolmogorov{true};
+  bool m_do_losses{true};
   std::string m_init_filename{"fiducial"};
 };
 

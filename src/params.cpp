@@ -29,8 +29,8 @@ void Params::print() {
   parfile << "[p max : " << p_max / cgs::GV << " GV]\n";
   parfile << "[halo size : " << halo_size / cgs::parsec << " pc]\n";
   parfile << "[magnetic field : " << magnetic_field / cgs::muG << " muG]\n";
-  parfile << " D_ISM : " << D_ISM / (cgs::cm2 / cgs::second) << " cm2/s]\n";
-  parfile << " D_ISM_p0 : " << D_ISM_p0 / cgs::GV << " GV]\n";
+  parfile << "[D_ISM : " << D_ISM / (cgs::cm2 / cgs::second) << " cm2/s]\n";
+  parfile << "[D_ISM_p0 : " << D_ISM_p0 / cgs::GV << " GV]\n";
   parfile << "[ck : " << ck << "]\n";
   parfile << "[injection slope : " << source_slope << "]\n";
   parfile << "[injection cutoff : " << source_cutoff / cgs::TV << " TV]\n";
@@ -42,6 +42,7 @@ void Params::print() {
   parfile << "[do 3D? " << std::boolalpha << do_3D << "]\n";
   parfile << "[do self-generation? " << std::boolalpha << do_selfgeneration << "]\n";
   parfile << "[do Kolmogorov? " << std::boolalpha << do_kolmogorov << "]\n";
+  parfile << "[do momentum losses? " << std::boolalpha << do_losses << "]\n";
   parfile << "Derived Parameters\n";
   double vA_infty = alfvenSpeed(ion_number_density, magnetic_field);
   parfile << "[v_A : " << vA_infty / (cgs::km / cgs::second) << " km/s]\n";
