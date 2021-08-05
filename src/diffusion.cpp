@@ -1,4 +1,6 @@
 // Copyright (c) 2018 carmeloevoli distributed under the MIT License
+#include <cassert>
+
 #include "waves.h"
 
 namespace CRWAVES {
@@ -34,7 +36,6 @@ void Waves::compute_dfdz_1D() {
         value = (f_cr.get(ip, iz + 1) - f_cr.get(ip, iz - 1)) / 2. / dz;
       df_dz.get(ip, iz) = std::fabs(value);
     }
-    df_dz.get(ip, 0) = df_dz.get(ip, 1);
     df_dz.get(ip, z_size - 1) = df_dz.get(ip, z_size - 2);
   }
 }
@@ -60,7 +61,7 @@ void Waves::compute_Q_W() {
   const double vA_infty = alfvenSpeed(par.ion_number_density, par.magnetic_field);
   const double U_B = magnetic_energy_density(par.magnetic_field);
   const double factor_damping = par.ck * vA_infty;
-  const double factor_growth = 2. * M_PI / 3. * cgs::c_light * vA_infty / U_B;
+  const double factor_growth = 2. * M_PI * cgs::c_light * vA_infty / 3. / U_B;
 #pragma omp parallel for
   for (size_t ip = 0; ip < p_size; ++ip) {
     const double k = 1. / larmor_radius(p.at(ip), par.magnetic_field);

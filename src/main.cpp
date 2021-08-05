@@ -7,14 +7,7 @@
 
 int main() {
   CRWAVES::Params par;
-  par.set_init_filename("testN0.1pc_3.5_kol_3.8e33");
-  par.set_do_selfgeneration(true);
-  par.set_source_slope(3.5);
-  par.set_do_kolmogorov(true);
-  par.set_do_3D(false);
-  par.set_source_luminosity(3.8e33 * cgs::erg / cgs::second);
-  par.set_p_size(32 * 4);
-  par.set_z_size(401);
+  par.set_init_filename("fiducial");
   par.print();
 
   CRWAVES::Waves W(par);
