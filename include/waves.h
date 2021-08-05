@@ -57,16 +57,16 @@ class Waves {
   void evolve_f_in_p(const size_t& number_of_operators, const double& t_now);
   void evolve_waves();
 
-  // // evolve.cpp
+  // evolve.cpp
   // void set_dt(const double& dt);
   // void print_counter2time(const int& max_counter, const int& dump_counter);
   int get_difftime(time_t start) const;
   void print_status(const size_t& counter, const time_t& start) const;
-  void compute_total_energy_in_fcr();
-  void compute_source_luminosity(double t);
-  // void test_total_energy(const size_t& counter, const double& dt);
-  void test_boundary_conditions();
-  void test_courant_conditions();
+  void compute_total_energy_in_fcr() const;
+  void compute_source_luminosity(double t) const;
+  void test_boundary_conditions() const;
+  void test_courant_conditions() const;
+  void test_wave_timescales() const;
   void evolve(const double& dt, const int& max_counter, const int& dump_counter);
 
  private:

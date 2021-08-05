@@ -26,7 +26,7 @@ void Waves::print_status(const size_t& counter, const time_t& start) const {
   std::cout << "elapsed time : " << get_difftime(start) << " s\n";
 }
 
-void Waves::compute_total_energy_in_fcr() {
+void Waves::compute_total_energy_in_fcr() const {
   const double dz = z.at(1) - z.at(0);
   const double dlnp = std::log(p[1] / p[0]);
   std::vector<double> I_z(z_size);
@@ -56,7 +56,7 @@ void Waves::compute_total_energy_in_fcr() {
   std::cout << " -- total energy in CRs: " << value / cgs::erg << " erg\n";
 }
 
-void Waves::compute_source_luminosity(double t) {
+void Waves::compute_source_luminosity(double t) const {
   const double dz = z.at(1) - z.at(0);
   const double dlnp = std::log(p[1] / p[0]);
   std::vector<double> I_z(z_size);
@@ -92,14 +92,14 @@ void Waves::compute_source_luminosity(double t) {
 
 //   return value;
 
-void Waves::test_boundary_conditions() {
+void Waves::test_boundary_conditions() const {
   double value = 0;
   for (size_t ip = 0; ip < p_size; ++ip) value += fabs(f_cr.get(ip, z_size - 1));
   for (size_t iz = 0; iz < z.size(); ++iz) value += fabs(f_cr.get(p_size - 1, iz));
   std::cout << " -- total CR density at borders : " << value << "\n";
 }
 
-void Waves::test_courant_conditions() {
+void Waves::test_courant_conditions() const {
   const double dt_dz2 = dt / pow2(z.at(1) - z.at(0));
   double beta_max = 0;
   for (size_t ip = 1; ip < p_size - 1; ++ip)
@@ -110,15 +110,30 @@ void Waves::test_courant_conditions() {
   std::cout << " -- max CFL for diffusion " << beta_max << "\n";
 }
 
+void Waves::test_wave_timescales() const {
+  double min_timescale = 1e10 * cgs::kyr;
+  for (size_t ip = 1; ip < p_size - 1; ++ip) {
+    for (size_t iz = 1; iz < z_size - 1; ++iz) {
+      double timescale = std::fabs(W_sg.get(ip, iz) / Q_W.get(ip, iz));
+      min_timescale = std::min(timescale, min_timescale);
+    }
+  }
+  std::cout << " -- minimum timescale for waves is : " << min_timescale / cgs::year << " yr\n";
+}
+
 void Waves::evolve(const double& dt, const int& max_counter, const int& dump_counter) {
   this->dt = dt;
   const time_t start = time(NULL);
   size_t counter = 0;
   while (counter < max_counter) {
     counter++;
-    evolve_f_in_z(2, counter * dt);
-    evolve_f_in_p(2, counter * dt);
-    if ((double)counter * dt > 0.1 * cgs::kyr && par.do_selfgeneration) {  // TODO check this
+    if (par.do_losses) {
+      evolve_f_in_z(2, counter * dt);
+      evolve_f_in_p(2, counter * dt);
+    } else {
+      evolve_f_in_z(1, counter * dt);
+    }
+    if ((double)counter * dt > 0.1 * cgs::kyr && par.do_selfgeneration) {
       compute_dfdz();
       compute_Q_W();
       // evolve_waves_in_z(1);
@@ -131,6 +146,7 @@ void Waves::evolve(const double& dt, const int& max_counter, const int& dump_cou
       compute_total_energy_in_fcr();
       test_boundary_conditions();
       test_courant_conditions();
+      test_wave_timescales();
       // dump(counter * dt);
       dump_single(counter * dt, 10. * cgs::parsec, 10. * cgs::TV);  // TODO remove this at the end!
     }
