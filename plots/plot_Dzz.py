@@ -8,7 +8,7 @@ import numpy as np
 
 def get_D_BC(p):
     GV = 1.
-    D_0 = 0.35 * 5 * 1e28 / 2.
+    D_0 = 0.35 * 5 * 1e28 # H = 5 kpc
     delta = 0.56
     p_break = 290.
     delta_delta = 0.22
@@ -23,12 +23,16 @@ def plot_dzz_spectrum():
 
     alpha = 0
 
-    filename = 'output/fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128_t_0.txt'
-    utils.read_spectrum_at_z(ax, filename, 3,   5, alpha, 'b')
-    utils.read_spectrum_at_z(ax, filename, 3,  10, alpha, 'r')
-    utils.read_spectrum_at_z(ax, filename, 3,  20, alpha, 'g')
+    filename = 'output/fcr_fiducial_nz_401_np_128_t_0.txt'
+    utils.read_spectrum_at_z(ax, filename, 3,  10, alpha, 'tab:red')
 
-    ax.legend(['5 pc', '10 pc', '20 pc'], fontsize=22, loc='upper left', frameon=False)
+#    filename = 'output/fcr_fiducial_nz_401_np_128_t_10.txt'
+#    utils.read_spectrum_at_z(ax, filename, 3,  10, alpha, 'tab:orange')
+#
+#    filename = 'output/fcr_fiducial_nz_401_np_128_t_100.txt'
+#    utils.read_spectrum_at_z(ax, filename, 3,  10, alpha, 'tab:green')
+
+#    ax.legend(['5 pc', '10 pc', '20 pc'], fontsize=22, loc='upper left', frameon=False)
 
     p = np.logspace(1, 6, 100)
     D = get_D_BC(p)
@@ -96,15 +100,55 @@ def plot_dzz_withtime():
 #    ax.plot(t, D20, color='tab:red', linestyle=':')
 #    ax.plot(t, D50, color='tab:green', linestyle=':')
 
-    get_dzz_in_time('fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128', 140, 1e4)
+    E = 1e4
 
-    t, D10, D20, D50 = np.loadtxt('fcr_testN0.1pc_3.5_kol_3.8e33_nz_401_np_128.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
-    ax.plot(t, D10, color='tab:blue', linestyle='--', label='source size = 1 pc')
-    ax.plot(t, D20, color='tab:red', linestyle=':')
-    ax.plot(t, D50, color='tab:green', linestyle=':')
+    filename = 'fcr_fiducial_0.1_nz_401_np_128'
+    get_dzz_in_time(filename, 1000, E)
+    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+    ax.plot(t, D10, color='tab:red', linestyle='--', label='fiducial')
 
-    t, D = np.loadtxt('tim.txt', usecols=(0,1), unpack=True, skiprows=0)
-    ax.plot(t, D, color='k', label='Tim')
+    filename = 'fcr_fiducial_nz_401_np_256'
+    get_dzz_in_time(filename, 1000, E)
+    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+    ax.plot(t, D10, color='tab:green', linestyle='--', label='fiducial (np x 2)')
+
+    filename = 'fcr_fiducial_longrelax_nz_401_np_128'
+    get_dzz_in_time(filename, 1000, E)
+    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+    ax.plot(t, D10, color='tab:blue', linestyle='--', label='fiducial (long relax)')
+    
+    filename = 'fcr_fiducial_nolosses_nz_401_np_128'
+    get_dzz_in_time(filename, 1000, E)
+    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+    ax.plot(t, D10, color='tab:purple', linestyle='--', label='fiducial no losses')
+
+    filename = 'fcr_fiducial_nz_801_np_128'
+    get_dzz_in_time(filename, 1000, E)
+    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+    ax.plot(t, D10, color='tab:orange', linestyle='--', label='fiducial (nz x 2)')
+
+#    filename = 'fcr_fiducial_nodfdz0_nz_401_np_128'
+#    get_dzz_in_time(filename, 10, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:orange', linestyle=':', label='fiducial (dfdz(0) = 0)')
+
+#    filename = 'fcr_fiducial_nz_201_np_128'
+#    get_dzz_in_time(filename, 70, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:orange', linestyle='--', label='fiducial (nz / 2)')
+#
+#    filename = 'fcr_fiducial_nz_801_np_128'
+#    get_dzz_in_time(filename, 250, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:purple', linestyle='--', label='fiducial (nz x 2)')
+
+#    get_dzz_in_time('fcr_fiducial_nolosses_nz_401_np_128', 90, 1e4)
+#
+#    t, D10, D20, D50 = np.loadtxt('fcr_fiducial_nolosses_nz_401_np_128.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:red', linestyle='--', label='fiducial (no losses)')
+
+#    t, D = np.loadtxt('tim.txt', usecols=(0,1), unpack=True, skiprows=0)
+#    ax.plot(t, D, color='k', label='Tim')
 
     ax.set_xlabel(r't [kyr]')
     ax.set_xlim([1, 1e3])
@@ -123,4 +167,4 @@ print ('Plotting starts here...')
 if __name__ == "__main__":
     plot_dzz_withtime()
     plot_dzz_spectrum()
-#    plot_dzz_profile()
+#plot_dzz_profile()
