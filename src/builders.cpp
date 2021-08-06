@@ -85,7 +85,7 @@ void Waves::build_CR_source_term() {
   for (size_t ip = 0; ip < p.size(); ++ip) {
     const double F = pl_with_cutoff(p.at(ip), par.source_slope, par.source_pmin, par.source_cutoff);
     for (size_t iz = 0; iz < z.size(); ++iz) {
-      const double size = 0.1 * cgs::parsec;
+      const double size = 1. * cgs::parsec;
       const double z_abs = fabs(z.at(iz));
       const double G = (par.do_3D) ? gaussian_3D(z_abs, size) : gaussian_1D(z_abs, size);
       Q_cr.get(ip, iz) = Q_0 * G * F;
