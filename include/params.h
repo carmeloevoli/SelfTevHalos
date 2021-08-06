@@ -74,9 +74,9 @@ class Params {
   const std::string& init_filename = m_init_filename;
 
  private:
-  size_t m_z_size{401};
+  size_t m_z_size{1001};
   size_t m_p_size{32 * 4};
-  double m_halo_size{100. * cgs::parsec};
+  double m_halo_size{500. * cgs::parsec};
   double m_p_min{1e2 * cgs::GV};
   double m_p_max{1. * cgs::PV};
   double m_source_age{340 * cgs::kyr};
