@@ -7,7 +7,7 @@
 
 int main() {
   CRWAVES::Params par;
-  par.set_init_filename("fiducial");
+  par.set_init_filename("test");
   par.print();
 
   CRWAVES::Waves W(par);
