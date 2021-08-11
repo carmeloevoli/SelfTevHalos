@@ -102,30 +102,45 @@ def plot_dzz_withtime():
 
     E = 1e4
 
-    filename = 'fcr_fiducial_0.1_nz_401_np_128'
-    get_dzz_in_time(filename, 1000, E)
-    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
-    ax.plot(t, D10, color='tab:red', linestyle='--', label='fiducial')
+#    filename = 'fcr_fiducial_0.1_nz_401_np_128'
+#    get_dzz_in_time(filename, 1000, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:red', linestyle='--', label='fiducial')
 
-    filename = 'fcr_fiducial_nz_401_np_256'
+    filename = 'fcr_test_nz_1001_np_128'
     get_dzz_in_time(filename, 1000, E)
     t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
-    ax.plot(t, D10, color='tab:green', linestyle='--', label='fiducial (np x 2)')
+    ax.plot(t, D10, color='tab:red', linestyle='-', label=r'fiducial ($\Delta z = 1$ pc)')
 
-    filename = 'fcr_fiducial_longrelax_nz_401_np_128'
-    get_dzz_in_time(filename, 1000, E)
-    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
-    ax.plot(t, D10, color='tab:blue', linestyle='--', label='fiducial (long relax)')
+#    filename = 'fcr_test_nz_2001_np_128'
+#    get_dzz_in_time(filename, 1000, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:blue', linestyle=':', label='fiducial ($\Delta z = 0.5$ pc)')
+#
+#    filename = 'fcr_test_nz_501_np_128'
+#    get_dzz_in_time(filename, 1000, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:green', linestyle=':', label='fiducial ($\Delta z = 2$ pc)')
     
-    filename = 'fcr_fiducial_nolosses_nz_401_np_128'
-    get_dzz_in_time(filename, 1000, E)
-    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
-    ax.plot(t, D10, color='tab:purple', linestyle='--', label='fiducial no losses')
-
-    filename = 'fcr_fiducial_nz_801_np_128'
-    get_dzz_in_time(filename, 1000, E)
-    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
-    ax.plot(t, D10, color='tab:orange', linestyle='--', label='fiducial (nz x 2)')
+#    filename = 'fcr_fiducial_nz_401_np_256'
+#    get_dzz_in_time(filename, 1000, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:green', linestyle='--', label='fiducial (np x 2)')
+#
+#    filename = 'fcr_fiducial_longrelax_nz_401_np_128'
+#    get_dzz_in_time(filename, 1000, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:blue', linestyle='--', label='fiducial (long relax)')
+#
+#    filename = 'fcr_fiducial_nolosses_nz_401_np_128'
+#    get_dzz_in_time(filename, 1000, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:purple', linestyle='--', label='fiducial no losses')
+#
+#    filename = 'fcr_fiducial_nz_801_np_128'
+#    get_dzz_in_time(filename, 1000, E)
+#    t, D10, D20, D50 = np.loadtxt(filename + '.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
+#    ax.plot(t, D10, color='tab:orange', linestyle='--', label='fiducial (nz x 2)')
 
 #    filename = 'fcr_fiducial_nodfdz0_nz_401_np_128'
 #    get_dzz_in_time(filename, 10, E)
@@ -147,8 +162,8 @@ def plot_dzz_withtime():
 #    t, D10, D20, D50 = np.loadtxt('fcr_fiducial_nolosses_nz_401_np_128.txt', usecols=(0,1,2,3), unpack=True, skiprows=0)
 #    ax.plot(t, D10, color='tab:red', linestyle='--', label='fiducial (no losses)')
 
-#    t, D = np.loadtxt('tim.txt', usecols=(0,1), unpack=True, skiprows=0)
-#    ax.plot(t, D, color='k', label='Tim')
+    t, D = np.loadtxt('tim.txt', usecols=(0,1), unpack=True, skiprows=0)
+    ax.plot(t, D, color='k', label='Tim')
 
     ax.set_xlabel(r't [kyr]')
     ax.set_xlim([1, 1e3])
