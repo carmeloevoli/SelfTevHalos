@@ -54,18 +54,17 @@ double source_term_norm_1D(double p_min, double p_cutoff, double slope, double L
   const double x_cut = p_cutoff / cgs::me_c;
   const double I = pl_integral(slope, x_min, x_cut);
   double value = L_0;
-  value /= 4.0 * cgs::c_light * utils::pow_integer<4>(cgs::me_c) * utils::pow_integer<2>(M_PI * R) * I;
+  value /= utils::pow_integer<2>(2. * M_PI * R) * cgs::c_light * utils::pow_integer<4>(cgs::me_c) * I;
   return value;
 }
 
 double source_term_norm_3D(double p_min, double p_cutoff, double slope, double L_0, double R) {
-  //   const double x_min = par.source_pmin / cgs::me_c;
-  //   const double x_cut = par.source_cutoff / cgs::me_c;
-  //   const double I = pl_integral(par.source_slope, x_min, x_cut);
-  //   double value = initial_luminosity(par.source_luminosity_today, par.source_age, par.source_tdecay);
-  //   value /= 4. * M_PI * cgs::c_light * pow4(cgs::me_c) * I;
-  //   return value;
-  return 0;
+  const double x_min = p_min / cgs::me_c;
+  const double x_cut = p_cutoff / cgs::me_c;
+  const double I = pl_integral(slope, x_min, x_cut);
+  double value = L_0;
+  value /= 4. * M_PI * cgs::c_light * utils::pow_integer<4>(cgs::me_c) * I;
+  return value;
 }
 
 }  // namespace CRWAVES
