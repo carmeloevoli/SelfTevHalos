@@ -59,7 +59,7 @@ void Waves::evolve_f_in_z_1D(const size_t& number_of_operators, const double& t_
         rhs.at(iz - 1) -= f_cr.get(ip, iz - 1) * lower_diagonal.at(iz - 2);
       }
 
-      const double Q_t = Q_cr.get(ip, iz);  // * source_evolution(t_now, par.source_tdecay);
+      const double Q_t = Q_cr.get(ip, iz) * source_evolution(t_now, par.source_tdecay);
       rhs.at(iz - 1) += dt * Q_t / (double)number_of_operators;
     }
 
@@ -73,58 +73,61 @@ void Waves::evolve_f_in_z_1D(const size_t& number_of_operators, const double& t_
 }
 
 void Waves::evolve_f_in_z_3D(const size_t& number_of_operators, const double& t_now) {
+  const double dz = std::abs(z.at(1) - z.at(0));
+  const double dt_half = 0.5 * dt;
+
   //   double vA_abs_dz = abs(vA_infty) / abs(z.at(1) - z.at(0));
 
-  // #pragma omp parallel for num_threads(OMP_NUM_THREADS)
-  //   for (int ip = 0; ip < p_size - 1; ++ip) {
-  //     std::vector<double> rhs(z_size - 1);
-  //     std::vector<double> central_diagonal(z_size - 1);
-  //     std::vector<double> upper_diagonal(z_size - 2);
-  //     std::vector<double> lower_diagonal(z_size - 2);
-  //     std::vector<double> fcr_up(z_size - 1);
+#pragma omp parallel for num_threads(OMP_NUM_THREADS)
+  for (int ip = 0; ip < p_size - 1; ++ip) {
+    std::vector<double> rhs(z_size - 1);
+    std::vector<double> central_diagonal(z_size - 1);
+    std::vector<double> upper_diagonal(z_size - 2);
+    std::vector<double> lower_diagonal(z_size - 2);
+    std::vector<double> fcr_up(z_size - 1);
 
-  //     for (int iz = 0; iz < z_size - 1; ++iz) {
-  //       double Dz = D_zz.get(ip, iz);
-  //       double DzUp = (iz < z_size - 1) ? D_zz.get(ip, iz + 1) : Dz;
-  //       double DzDo = (iz > 0) ? D_zz.get(ip, iz - 1) : Dz;
+    for (int iz = 0; iz < z_size - 1; ++iz) {
+      const double Dz = D_zz.get(ip, iz);
+      const double DzUp = (iz < z_size - 1) ? D_zz.get(ip, iz + 1) : Dz;
+      const double DzDo = (iz > 0) ? D_zz.get(ip, iz - 1) : Dz;
 
-  //       double Dz_dz2 = Dz / pow2(dz);
-  //       double dDz_4_dz2 = (DzUp - DzDo) / 4. / pow2(dz);
-  //       double r = std::max(fabs(z.at(iz)), 0.01 * mks::pc);  // TODO smaller radius
-  //       double Dz_dz_r = Dz / dz / r;
+      const double Dz_dz2 = Dz / pow2(dz);
+      const double dDz_4_dz2 = (DzUp - DzDo) / 4. / pow2(dz);
+      const double r = std::max(fabs(z.at(iz)), 0.1 * cgs::parsec);  // TODO smaller radius
+      const double Dz_dz_r = Dz / dz / r;
 
-  //       double UZ = Dz_dz2 + dDz_4_dz2 + Dz_dz_r;
-  //       double CZ = 2. * Dz_dz2;
-  //       double LZ = Dz_dz2 - dDz_4_dz2 - Dz_dz_r;
+      double UZ = Dz_dz2 + dDz_4_dz2 + Dz_dz_r;
+      double CZ = 2. * Dz_dz2;
+      double LZ = Dz_dz2 - dDz_4_dz2 - Dz_dz_r;
 
-  //       central_diagonal.at(iz) = 1. + dt_half * CZ;
-  //       if (iz != z_size - 2) {
-  //         upper_diagonal.at(iz) = -dt_half * UZ;
-  //       }
-  //       if (iz == 0) {
-  //         upper_diagonal.at(iz) += -dt_half * LZ;
-  //       }
-  //       if (iz != 0) {
-  //         lower_diagonal.at(iz - 1) = -dt_half * LZ;
-  //       }
-  //       rhs.at(iz) = f_cr.get(ip, iz) * (2. - central_diagonal.at(iz));
-  //       if (iz != z_size - 2) {
-  //         rhs.at(iz) -= f_cr.get(ip, iz + 1) * upper_diagonal.at(iz);
-  //       }
-  //       if (iz != 0) {
-  //         rhs.at(iz) -= f_cr.get(ip, iz - 1) * lower_diagonal.at(iz - 1);
-  //       }
-  //       double Q = Q_cr.get(ip, iz) * source_evolution(t_now, par.source_tdecay);
-  //       rhs.at(iz) += dt * Q / (double)number_of_operators;
-  //     }
+      central_diagonal.at(iz) = 1. + dt_half * CZ;
+      if (iz != z_size - 2) {
+        upper_diagonal.at(iz) = -dt_half * UZ;
+      }
+      if (iz == 0) {
+        upper_diagonal.at(iz) += -dt_half * LZ;
+      }
+      if (iz != 0) {
+        lower_diagonal.at(iz - 1) = -dt_half * LZ;
+      }
+      rhs.at(iz) = f_cr.get(ip, iz) * (2. - central_diagonal.at(iz));
+      if (iz != z_size - 2) {
+        rhs.at(iz) -= f_cr.get(ip, iz + 1) * upper_diagonal.at(iz);
+      }
+      if (iz != 0) {
+        rhs.at(iz) -= f_cr.get(ip, iz - 1) * lower_diagonal.at(iz - 1);
+      }
+      double Q = Q_cr.get(ip, iz) * source_evolution(t_now, par.source_tdecay);
+      rhs.at(iz) += dt * Q / (double)number_of_operators;
+    }
 
-  //     GSL::gsl_linalg_solve_tridiag(central_diagonal, upper_diagonal, lower_diagonal, rhs, fcr_up);
+    GSL::gsl_linalg_solve_tridiag(central_diagonal, upper_diagonal, lower_diagonal, rhs, fcr_up);
 
-  //     for (int iz = 0; iz < z_size - 1; ++iz) {
-  //       double value = fcr_up.at(iz);
-  //       f_cr.get(ip, iz) = std::max(value, 0.);
-  //     }
-  //   }  // for
+    for (int iz = 0; iz < z_size - 1; ++iz) {
+      double value = fcr_up.at(iz);
+      f_cr.get(ip, iz) = std::max(value, 0.);
+    }
+  }  // for
 }
 
 void Waves::evolve_f_in_p(const size_t& number_of_operators, const double& t_now) {
@@ -187,7 +190,7 @@ void Waves::evolve_waves() {
 #pragma omp parallel for num_threads(OMP_NUM_THREADS)
   for (size_t ip = 0; ip < p_size; ++ip) {
     for (size_t iz = 0; iz < z_size; ++iz) {
-      double value = W_sg.get(ip, iz) + dt * Q_W.get(ip, iz);
+      const double value = W_sg.get(ip, iz) + dt * Q_W.get(ip, iz);
       // value = std::min(value, 1. / k_); TODO check if Bohm limit is violated
       W_sg.get(ip, iz) = std::max(value, 0.);
     }
